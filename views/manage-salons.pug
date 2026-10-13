@@ -1,0 +1,96 @@
+
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title My Salon | Barber Platform
+    link(rel="stylesheet" href="/css/styles.css")
+
+  body.admin-body
+    aside.admin-sidebar
+      a.admin-brand(href="/dashboard")
+        span.brand-mark B.
+        span BARBER PLATFORM
+
+      p.admin-nav-label WORKSPACE
+      a.admin-nav-link(href="/dashboard") Overview
+      a.admin-nav-link.active(href="/salons/manage") My Salon
+      a.admin-nav-link(href="/") View Public Website
+
+      div.admin-sidebar-bottom
+        span.admin-status-dot ●
+        span Approved salon owner
+        form(action="/logout" method="POST")
+          button.admin-logout(type="submit") Log out
+
+    main.admin-main
+      header.admin-topbar
+        div
+          p.eyebrow OWNER WORKSPACE
+          h1 My Salon
+          p.admin-muted Manage your business details and keep your salon information up to date.
+        a.admin-back-link(href="/dashboard") ← Dashboard
+
+      section.admin-welcome.owner-hero
+        div
+          span.admin-welcome-tag YOUR BUSINESS
+          h2 Your salon. Your identity.
+          p Manage your assigned salon listing from one place.
+        div.admin-welcome-symbol B.
+
+      if salons.length
+        section.owner-section
+          div.dashboard-section-heading
+            div
+              p.eyebrow SALON MANAGEMENT
+              h2 Your assigned salon
+              p.admin-muted Update your business information and check how your listing appears.
+
+          div.owner-salon-grid
+            each salon in salons
+              article.owner-salon-card
+                div.owner-salon-cover
+                  span.owner-cover-label BARBER PLATFORM
+                  span.owner-cover-monogram= salon.name.substring(0, 1).toUpperCase()
+
+                div.owner-salon-content
+                  div.owner-salon-heading
+                    div
+                      span.owner-status
+                        span.owner-status-dot ●
+                        |  Assigned to you
+                      h3= salon.name
+                      p.owner-location= salon.address + ", " + salon.city
+
+                  if salon.description
+                    p.owner-description= salon.description
+                  else
+                    p.owner-description Add a description to help customers learn about your salon.
+
+                  div.owner-detail-list
+                    div.owner-detail
+                      span.owner-detail-label LOCATION
+                      strong= salon.city
+                    div.owner-detail
+                      span.owner-detail-label LISTING
+                      strong Published
+
+                  div.owner-salon-actions
+                    a.button-link(href="/salons/" + salon.id + "/edit") Edit salon details
+                    a.owner-secondary-link(href="/") View public directory →
+
+      else
+        section.owner-empty-panel
+          div.owner-empty-symbol B.
+          p.eyebrow YOUR BUSINESS
+          h2 Your salon is almost ready.
+          p.admin-muted Your owner account is approved, but no salon has been assigned to you yet.
+          p.admin-muted Ask the platform administrator to create or assign your salon listing.
+          a.button-link(href="/dashboard") Return to dashboard
+
+      section.owner-help-panel
+        div.owner-help-icon i
+        div
+          h3 Keep your listing up to date
+          p Customers rely on accurate salon information. Check your name, location and description regularly.

@@ -1,0 +1,178 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    meta(name="theme-color" content="#11110f")
+    meta(name="description" content="Discover local barbers, compare services and book your next cut.")
+    title= title
+    link(rel="preconnect" href="https://fonts.googleapis.com")
+    link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet")
+    link(rel="stylesheet" href="/css/styles.css")
+  body
+    .site-shell
+      header.navbar
+        a.brand(href="/" aria-label="Barber Platform home")
+          span.brand-mark B.
+          span.brand-name BARBER #[span.brand-light PLATFORM]
+        nav.nav-links(aria-label="Main navigation")
+          a(href="#discover") Discover
+          a(href="#how-it-works") How it works
+          a(href="#for-barbers") For barbers
+        .nav-actions
+          a.nav-login(href="#sign-in") Log in
+          a.button.button-small(href="#discover") Find a barber
+      main
+        section.hero
+          .hero-copy
+            .eyebrow
+              span.eyebrow-dot
+              | THE NEXT GENERATION OF GROOMING
+            h1 Your next cut.
+              br
+              span Your kind of barber.
+            p.hero-description
+              | Discover the best barbers around you, compare their work, and book a time that works for your life.
+            form.search-panel(action="/" method="get" id="salon-search-form")
+              label.search-field
+                span.field-icon.location-icon
+                  | ◉
+                span.field-content
+                  span.field-label LOCATION
+                  input(
+                          type="text"
+                          name="location"
+                          placeholder="Enter your area"
+                          value=location
+                        )
+              span.search-divider
+              label.search-field
+                span.field-icon
+                  | ✂
+                span.field-content
+                  span.field-label WHAT ARE YOU LOOKING FOR?
+                  select(name="service" aria-label="Choose a service")
+                    option(value="" selected=(!service)) Any service
+                    option(value="fade" selected=(service === "fade") ) Fade
+                    option(value="beard" selected=(service === "beard")) Beard trim
+                    option(value="full-cut" selected=(service === "full-cut")) Classic haircut
+              button.button.search-button(type="submit") Explore barbers
+            .hero-proof
+              .proof-avatars(aria-hidden="true")
+                span.avatar.avatar-one J
+                span.avatar.avatar-two M
+                span.avatar.avatar-three A
+              p #[strong Good cuts, great people.] #[br] Find your local favourite.
+          .hero-visual
+            .visual-glow
+            .visual-label.visual-label-top
+              span.status-dot
+              | 3D EXPERIENCE
+            #barber-scene(aria-label="Animated 3D barber pole illustration")
+              .scene-fallback
+                .fallback-pole
+                  span
+                  span
+                  span
+            .floating-card.floating-card-top
+              span.card-icon ✦
+              span
+                strong Your style, your choice
+                small Discover skilled local barbers
+            .floating-card.floating-card-bottom
+              .mini-stars ★★★★★
+              strong The right cut is closer than you think
+            .visual-caption
+              span 01 / DISCOVER YOUR STYLE
+              span SCROLL TO EXPLORE ↓
+        section.stats-strip(aria-label="Platform highlights")
+          .stat-item
+            strong 01
+            span Find barbers near you
+          .stat-item
+            strong 02
+            span Compare services & prices
+          .stat-item
+            strong 03
+            span Book on your schedule
+          .stat-item
+            strong 04
+            span Show up feeling fresh
+        section.discover-section#discover
+          .section-heading
+            .section-heading-copy
+              .eyebrow.section-eyebrow MADE FOR YOUR NEXT LOOK
+              h2 Find the chair
+                br
+                span that gets you.
+            p.section-intro Explore the local talent. From sharp fades to a clean-up that makes all the difference.
+          .filter-row
+            button.filter-chip.is-active(type="button" data-filter="all") All styles
+            button.filter-chip(type="button" data-filter="fade") Fades
+            button.filter-chip(type="button" data-filter="classic") Classic cuts
+            button.filter-chip(type="button" data-filter="beard") Beard care
+            span.filter-note Demo listings · Sample content
+          
+          .salon-grid
+            if salons && salons.length
+              each salon, i in salons
+                article.salon-card(data-style="all")
+                  .salon-image(class="salon-image-" + ((i % 3) + 1))
+                    span.salon-tag LOCAL SALON
+                    span.image-number= String(i + 1).padStart(2, "0")
+                  .salon-card-body
+                    .salon-title-row
+                      h3= salon.name
+                      span.rating= salon.city
+                    p.salon-location
+                      | ◉ #{salon.address}, #{salon.city}
+                    p.salon-description= salon.description || "Discover services at this salon."
+                    .salon-meta
+                      span= salon.city
+                      span Profile details coming soon
+                    a.salon-link(href="#booking")
+                      | Explore salon
+                      span(aria-hidden="true") ↗
+            else
+              p No salons found yet. Check back soon.
+
+        section.how-section#how-it-works
+          .eyebrow.section-eyebrow SIMPLE BY DESIGN
+          h2 A better booking experience.
+          .steps-grid
+            article.step-card
+              span.step-number 01
+              .step-symbol ⌕
+              h3 Discover
+              p Search nearby barbers and find a style that fits you.
+            article.step-card
+              span.step-number 02
+              .step-symbol ◈
+              h3 Compare
+              p Check services, prices, portfolios and available times.
+            article.step-card
+              span.step-number 03
+              .step-symbol ↗
+              h3 Book
+              p Choose a slot and get your next cut in the calendar.
+        section.barber-cta#for-barbers
+          .cta-copy
+            .eyebrow THE OTHER SIDE OF THE CHAIR
+            h2 Great at your craft?
+              br
+              span Get discovered.
+            p Create your salon profile, manage your services and bring your bookings together in one place.
+            a.button.button-light(href="mailto:hello@barberplatform.example") Join as a barber #[span(aria-hidden="true") ↗]
+          .cta-orbit(aria-hidden="true")
+            .orbit-ring.orbit-ring-one
+            .orbit-ring.orbit-ring-two
+            .orbit-core B.
+      footer.footer
+        a.brand(href="/")
+          span.brand-mark B.
+          span.brand-name BARBER #[span.brand-light PLATFORM]
+        p Built around the people behind the chair.
+        span.footer-note © 2026 Barber Platform · Student project prototype
+    script(type="module" src="/js/scene.js")
+    script(src="/js/main.js" defer)

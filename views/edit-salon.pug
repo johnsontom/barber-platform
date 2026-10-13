@@ -1,0 +1,32 @@
+
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title= title
+    link(rel="stylesheet" href="/css/styles.css")
+  body
+    main.management-page
+      header.management-header
+        p.eyebrow SALON ADMINISTRATION
+        h1 Edit salon
+        p Update the details customers see on your listing.
+
+      section.management-panel
+        form(action="/salons/" + salon.id + "/edit" method="POST")
+          label(for="name") Salon name
+          input#name(type="text" name="name" value=salon.name required)
+
+          label(for="address") Street address
+          input#address(type="text" name="address" value=salon.address required)
+
+          label(for="city") City
+          input#city(type="text" name="city" value=salon.city required)
+
+          label(for="description") Description
+          textarea#description(name="description" rows="4")= salon.description || ""
+
+          button(type="submit") Save changes
+
+      a(href="/salons/manage") ← Back to salon management
