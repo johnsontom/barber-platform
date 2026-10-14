@@ -6,27 +6,82 @@ html(lang="en")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title= title
     link(rel="stylesheet" href="/css/styles.css")
+
   body
-    main.management-page
+    main.management-page.edit-salon-page
       header.management-header
-        p.eyebrow SALON ADMINISTRATION
-        h1 Edit salon
-        p Update the details customers see on your listing.
+        div
+          p.eyebrow SALON ADMINISTRATION
+          h1 Edit your salon
+          p Update the information customers see when they discover your business.
 
-      section.management-panel
+        a.button-link(href="/salons/manage") Back to dashboard
+
+      section.management-panel.edit-salon-panel
+        div.edit-section-heading
+          div
+            p.eyebrow BUSINESS PROFILE
+            h2 Salon information
+          p.edit-required-note * Required fields
+
         form(action="/salons/" + salon.id + "/edit" method="POST")
-          label(for="name") Salon name
-          input#name(type="text" name="name" value=salon.name required)
+          div.edit-form-grid
+            div.edit-field
+              label(for="name") Salon name *
+              input#name(
+                type="text"
+                name="name"
+                value=salon.name
+                maxlength="150"
+                placeholder="e.g. Morrow & Blade"
+                required
+              )
 
-          label(for="address") Street address
-          input#address(type="text" name="address" value=salon.address required)
+            div.edit-field
+              label(for="city") City *
+              input#city(
+                type="text"
+                name="city"
+                value=salon.city
+                maxlength="100"
+                placeholder="e.g. London"
+                required
+              )
 
-          label(for="city") City
-          input#city(type="text" name="city" value=salon.city required)
+            div.edit-field.edit-field-full
+              label(for="address") Street address *
+              input#address(
+                type="text"
+                name="address"
+                value=salon.address
+                maxlength="255"
+                placeholder="Building number and street"
+                required
+              )
 
-          label(for="description") Description
-          textarea#description(name="description" rows="4")= salon.description || ""
+            div.edit-field.edit-field-full
+              label(for="description") About your salon
+              textarea#description(
+                name="description"
+                rows="6"
+                maxlength="1000"
+                placeholder="Tell customers about your salon, your style and the services you specialise in."
+              )= salon.description || ""
+              p.edit-field-hint
+                span A short introduction helps customers understand your business.
+                span#description-count 0 / 1000
 
-          button(type="submit") Save changes
+          div.edit-form-actions
+            a.edit-cancel-link(href="/salons/manage") Cancel
+            button(type="submit") Save changes
 
-      a(href="/salons/manage") ← Back to salon management
+      script.
+        const description = document.getElementById('description');
+        const counter = document.getElementById('description-count');
+
+        function updateDescriptionCount() {
+          counter.textContent = `${description.value.length} / 1000`;
+        }
+
+        description.addEventListener('input', updateDescriptionCount);
+        updateDescriptionCount();

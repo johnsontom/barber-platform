@@ -1,0 +1,115 @@
+
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title= title
+    link(rel="stylesheet" href="/css/styles.css")
+
+  body
+    main.management-page.services-page
+      header.management-header
+        div
+          p.eyebrow SALON ADMINISTRATION
+          h1 Services & Pricing
+          p Manage the services customers can book at #{salon.name}.
+        a.button-link(href="/salons/manage") Back to dashboard
+
+      section.management-panel
+        p.eyebrow ADD A SERVICE
+        h2 Create a new service
+
+        form(action="/salons/" + salon.id + "/services" method="POST")
+          label(for="new-name") Service name
+          input#new-name(type="text" name="name" maxlength="120" placeholder="e.g. Skin Fade" required)
+
+          label(for="new-description") Description
+          textarea#new-description(name="description" rows="3" maxlength="2000" placeholder="Describe what's included")
+
+          div.service-form-grid
+            div
+              label(for="new-price") Price (£)
+              input#new-price(type="number" name="price" min="0" max="999999.99" step="0.01" placeholder="22.00" required)
+            div
+              label(for="new-duration") Duration (minutes)
+              input#new-duration(type="number" name="duration_minutes" min="1" max="65535" step="1" placeholder="40" required)
+
+          button(type="submit") Add service
+
+      section.services-list-section
+        div.services-list-heading
+          div
+            p.eyebrow YOUR MENU
+            h2 Existing services
+          p= services.length + " service(s)"
+
+        if services.length
+          each service in services
+            article.management-panel.service-editor
+              form(action="/salons/" + salon.id + "/services/" + service.id + "/edit" method="POST")
+                div.service-editor-heading
+                  div
+                    h3= service.name
+                    p Service ID: #{service.id}
+                  span.service-price £#{Number(service.price).toFixed(2)}
+
+                label(for="name-" + service.id) Service name
+                input(
+                  id="name-" + service.id
+                  type="text"
+                  name="name"
+                  value=service.name
+                  maxlength="120"
+                  required
+                )
+
+                label(for="description-" + service.id) Description
+                textarea(
+                  id="description-" + service.id
+                  name="description"
+                  rows="3"
+                  maxlength="2000"
+                )= service.description || ""
+
+                div.service-form-grid
+                  div
+                    label(for="price-" + service.id) Price (£)
+                    input(
+                      id="price-" + service.id
+                      type="number"
+                      name="price"
+                      value=Number(service.price).toFixed(2)
+                      min="0"
+                      max="999999.99"
+                      step="0.01"
+                      required
+                    )
+                  div
+                    label(for="duration-" + service.id) Duration (minutes)
+                    input(
+                      id="duration-" + service.id
+                      type="number"
+                      name="duration_minutes"
+                      value=service.duration_minutes
+                      min="1"
+                      max="65535"
+                      step="1"
+                      required
+                    )
+
+                div.service-actions
+                  button(type="submit") Save service
+
+              form(
+                action="/salons/" + salon.id + "/services/" + service.id + "/delete"
+                method="POST"
+                onsubmit="return confirm('Delete this service? This cannot be undone.');"
+              )
+                button.service-delete-button(type="submit") Delete service
+        else
+          div.management-panel.empty-state
+            h3 No services yet
+            p Add your first service using the form above.
+
+      a.back-home(href="/salons/manage") ← Back to salon management
