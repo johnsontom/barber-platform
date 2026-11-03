@@ -1,0 +1,71 @@
+extends community-layout
+block content
+  section.community-hero.forum-hero
+    div
+      p.community-eyebrow YOUR VOICE, OUR COMMUNITY
+      h1 Community forum
+      p.community-lede Share an opinion, talk about a salon or suggest what we should build next.
+    a.community-button(href="/forum/new")= user ? "Start a discussion +" : "Sign in to start a discussion"
+  nav.forum-categories(aria-label="Discussion categories")
+    a(href=forumUrl(state, { category: "", page: 1 }) aria-current=!state.category ? "page" : false) All discussions
+    each category in categories
+      a(href=forumUrl(state, { category: category.value, page: 1 }) aria-current=state.category === category.value ? "page" : false)= category.label
+  form.forum-filters(method="GET" action="/forum" role="search")
+    if state.category
+      input(type="hidden" name="category" value=state.category)
+    .community-field.forum-search
+      label(for="forum-search") Search discussions
+      input#forum-search(type="search" name="q" value=state.q maxlength="120" placeholder="An idea, experience or question")
+    .community-field
+      label(for="forum-salon-filter") Related salon
+      select#forum-salon-filter(name="salon_id")
+        option(value="") All salons
+        each salon in salons
+          option(value=salon.id selected=Number(salon.id) === Number(state.salonId)) #{salon.name} · #{salon.city}
+    .community-field
+      label(for="forum-sort") Sort by
+      select#forum-sort(name="sort")
+        option(value="latest" selected=state.sort === "latest") Newest first
+        option(value="popular" selected=state.sort === "popular") Most liked
+    button.community-button.community-button-small(type="submit") Apply
+  .forum-result-heading
+    p #{feed.total} #{feed.total === 1 ? "discussion" : "discussions"}
+    if state.q || state.category || state.salonId
+      a(href="/forum") Clear filters
+  if feed.posts.length
+    .forum-feed
+      each post in feed.posts
+        article.forum-card
+          .forum-avatar(aria-hidden="true")= post.authorInitials
+          .forum-card-content
+            .forum-meta
+              span.forum-category= post.categoryLabel
+              if post.salon_name
+                span= post.salon_name
+            h2
+              a(href="/forum/" + post.id)= post.title
+            p.forum-preview= post.preview
+            .forum-byline
+              span= post.author_name
+              time(datetime=post.createdIso)= post.dateLabel
+          a.forum-card-counts(href="/forum/" + post.id aria-label="Open discussion: " + post.like_count + " likes and " + post.comment_count + " comments")
+            span ♥ #{post.like_count}
+            span #{post.comment_count} #{post.comment_count === 1 ? "comment" : "comments"}
+  else
+    .forum-empty.community-panel
+      h2= state.q || state.category || state.salonId ? "No discussions match yet." : "Be the first to pull up a chair."
+      p= state.q || state.category || state.salonId ? "Try another search or start a conversation of your own." : "A question, a salon experience or a new idea—this is your space to share it."
+      a.community-button(href="/forum/new") Start a discussion
+  if feed.pages > 1
+    nav.forum-pagination(aria-label="Discussion pages")
+      if feed.page > 1
+        a.community-button.community-button-outline(href=forumUrl(state, { page: feed.page - 1 })) ← Previous
+      span Page #{feed.page} of #{feed.pages}
+      if feed.page < feed.pages
+        a.community-button.community-button-outline(href=forumUrl(state, { page: feed.page + 1 })) Next →
+  if !user
+    .forum-membership.community-panel
+      div
+        h3 A conversation worth joining.
+        p Everyone can read. Create an account to post, comment and like discussions.
+      a.community-button.community-button-outline(href="/register") Create an account
