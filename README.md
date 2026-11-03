@@ -1,4 +1,4 @@
-# Barber Platform
+# Barber Finder
 
 A location-based barbershop directory and appointment-booking platform built
 with Node.js, Express, Pug and MySQL.
