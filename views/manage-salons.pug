@@ -1,0 +1,370 @@
+
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    meta(name="theme-color" content="#11110f")
+    title My Salon | Barber Platform
+    link(rel="stylesheet" href="/css/styles.css")
+
+    style.
+      .photo-management {
+        --photo-bg: #191c15;
+        --photo-border: #343a2a;
+        --photo-text: #f4f5ed;
+        --photo-muted: #b6bcaa;
+        --photo-accent: #c7ff55;
+        color: var(--photo-text);
+      }
+      .photo-management .saved-gallery img {
+        aspect-ratio: 4 / 3;
+      }
+      .photo-management .photo-panel {
+        margin-top: 22px;
+        padding: 22px;
+        background: var(--photo-bg);
+        border: 1px solid var(--photo-border);
+        border-radius: 16px;
+      }
+
+      .photo-management .photo-panel h3 {
+        margin: 0 0 7px;
+        color: var(--photo-text);
+      }
+
+      .photo-management .photo-panel p {
+        color: var(--photo-muted);
+        font-size: 13px;
+        line-height: 1.65;
+      }
+
+      .photo-management .photo-upload-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .photo-management .photo-upload-box {
+        padding: 17px;
+        border: 1px dashed #505940;
+        border-radius: 12px;
+        background: #141710;
+      }
+
+      .photo-management .photo-preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        margin-bottom: 15px;
+        overflow: hidden;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #303725, #181b14);
+        color: var(--photo-accent);
+      }
+
+      .photo-management .photo-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .photo-management .photo-preview-placeholder {
+        padding: 12px;
+        text-align: center;
+        color: var(--photo-muted);
+        font-size: 12px;
+      }
+
+      .photo-management .photo-field-label {
+        display: block;
+        margin-bottom: 9px;
+        color: var(--photo-text);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .photo-management input[type="file"] {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+        border: 1px solid var(--photo-border);
+        border-radius: 9px;
+        background: #20241a;
+        color: var(--photo-muted);
+        font-size: 12px;
+      }
+
+      .photo-management input[type="file"]::file-selector-button {
+        margin-right: 10px;
+        padding: 8px 10px;
+        border: 0;
+        border-radius: 6px;
+        background: var(--photo-accent);
+        color: #171b10;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .photo-management .photo-help {
+        margin-bottom: 0;
+        font-size: 11px !important;
+      }
+
+      .photo-management .photo-submit {
+        margin-top: 13px;
+        padding: 11px 14px;
+        border: 0;
+        border-radius: 9px;
+        background: var(--photo-accent);
+        color: #171b10;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .photo-management .photo-submit:hover {
+        background: #ddff9b;
+      }
+
+      .photo-management .photo-gallery-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .photo-management .photo-gallery-preview img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--photo-border);
+      }
+
+      .photo-management .photo-cover-current {
+        display: block;
+        width: 100%;
+        max-height: 250px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+  body.admin-body
+    aside.admin-sidebar
+      a.admin-brand(href="/dashboard")
+        span.brand-mark B.
+        span BARBER PLATFORM
+
+      p.admin-nav-label WORKSPACE
+      a.admin-nav-link(href="/dashboard") Overview
+      a.admin-nav-link.active(href="/salons/manage") My Salon
+      a.admin-nav-link(href="/") View Public Website
+
+      div.admin-sidebar-bottom
+        span.admin-status-dot ●
+        span Approved salon owner
+        form(action="/logout" method="POST")
+          button.admin-logout(type="submit") Log out
+
+    main.admin-main.photo-management
+      header.admin-topbar
+        div
+          p.eyebrow OWNER WORKSPACE
+          h1 My Salon
+          p.admin-muted Manage your business, photos and services.
+        a.admin-back-link(href="/dashboard") ← Dashboard
+
+      section.admin-welcome.owner-hero
+        div
+          span.admin-welcome-tag YOUR BUSINESS
+          h2 Your salon. Your identity.
+          p Show customers your business and the work you do.
+        div.admin-welcome-symbol B.
+
+      if salons.length
+        section.owner-section
+          div.dashboard-section-heading
+            div
+              p.eyebrow SALON MANAGEMENT
+              h2 Your assigned salon
+              p.admin-muted Manage your business information and photo gallery.
+
+          div.owner-salon-grid
+            each salon in salons
+              article.owner-salon-card
+                div.owner-salon-cover
+                  if salon.cover_image
+                    img.photo-cover-current(src=salon.cover_image alt=salon.name + " cover photo")
+                  else
+                    span.owner-cover-label BARBER PLATFORM
+                    span.owner-cover-monogram= salon.name.substring(0, 1).toUpperCase()
+
+                  a.button-link(href="/salons/" + salon.id + "/services") Manage services & pricing
+
+                div.owner-salon-content
+                  div.owner-salon-heading
+                    div
+                      span.owner-status
+                        span.owner-status-dot ●
+                        | Assigned to you
+                      h3= salon.name
+                      p.owner-location= salon.address + ", " + salon.city
+
+                  if salon.description
+                    p.owner-description= salon.description
+                  else
+                    p.owner-description Add a description to help customers learn about your salon.
+
+                  div.owner-detail-list
+                    div.owner-detail
+                      span.owner-detail-label LOCATION
+                      strong= salon.city
+                    div.owner-detail
+                      span.owner-detail-label LISTING
+                      strong Published
+
+                  div.owner-salon-actions
+                    a.button-link(href="/salons/" + salon.id + "/edit") Edit salon details
+                    a.button-link(href="/salons/" + salon.id + "/services") Manage services
+                    a.button-link(href="/appointments/manage") Manage appointments
+                    a.owner-secondary-link(href="/salons/" + salon.id) View public profile →
+
+                section.photo-panel
+                  h3 Show customers your salon
+                  p Upload a cover image and photos of your business. Choose clear, good-quality pictures that you have permission to use.
+
+                  div.photo-upload-grid
+                    div.photo-upload-box
+                      .photo-preview
+                        if salon.cover_image
+                          img(src=salon.cover_image alt="Current salon cover")
+                        else
+                          .photo-preview-placeholder
+                            | Your salon cover preview
+
+                      form.photo-upload-form(
+                        action="/salons/" + salon.id + "/cover-image"
+                        method="POST"
+                        enctype="multipart/form-data"
+                        data-preview-form
+                      )
+                        label.photo-field-label(for="cover-" + salon.id) Salon cover photo
+                        input(
+                          id="cover-" + salon.id
+                          type="file"
+                          name="cover_image"
+                          accept="image/jpeg,image/png,image/webp"
+                          required
+                          data-cover-input
+                        )
+                        p.photo-help JPG, PNG or WebP. Maximum size will be enforced by the server.
+                        button.photo-submit(type="submit") Upload cover photo
+
+                    div.photo-upload-box
+                      .photo-preview
+                        .photo-preview-placeholder
+                          | Select photos to preview your gallery
+
+                      form.photo-upload-form(
+                        action="/salons/" + salon.id + "/gallery"
+                        method="POST"
+                        enctype="multipart/form-data"
+                        data-gallery-form
+                      )
+                        label.photo-field-label(for="gallery-" + salon.id) Business gallery
+                        input(
+                          id="gallery-" + salon.id
+                          type="file"
+                          name="gallery_images"
+                          accept="image/jpeg,image/png,image/webp"
+                          multiple
+                          required
+                          data-gallery-input
+                        )
+                        div.photo-gallery-preview(data-gallery-preview)
+                        p.photo-help Select multiple photos of your shop, chairs, interior and work.
+                        button.photo-submit(type="submit") Upload gallery photos
+                section.photo-panel
+                  h3 Your uploaded gallery
+                  p These photos have been saved and are available to display on your public salon profile.
+
+                  if salon.galleryImages && salon.galleryImages.length
+                    .photo-gallery-preview.saved-gallery
+                      each image in salon.galleryImages
+                        img(
+                          src=image.image_url
+                          alt=salon.name + " gallery photo"
+                          loading="lazy"
+                        )
+                    p.photo-help= salon.galleryImages.length + " gallery photo(s) saved."
+                  else
+                    p No gallery photos uploaded yet.
+      else
+        section.owner-empty-panel
+          div.owner-empty-symbol B.
+          p.eyebrow YOUR BUSINESS
+          h2 Your salon is almost ready.
+          p.admin-muted Your owner account is approved, but no salon has been assigned to you yet.
+          p.admin-muted Ask the platform administrator to create or assign your salon listing.
+          a.button-link(href="/dashboard") Return to dashboard
+
+      section.owner-help-panel
+        div.owner-help-icon i
+        div
+          h3 Keep your listing up to date
+          p Accurate details and genuine photos help customers choose the right salon.
+
+    script.
+      (() => {
+        document.querySelectorAll('[data-preview-form]').forEach((form) => {
+          const input = form.querySelector('[data-cover-input]');
+          const preview = form.querySelector('.photo-preview');
+
+          if (!input || !preview) return;
+
+          input.addEventListener('change', () => {
+            const file = input.files && input.files[0];
+            if (!file || !file.type.startsWith('image/')) return;
+
+            const image = document.createElement('img');
+            image.alt = 'Selected cover preview';
+            image.src = URL.createObjectURL(file);
+            preview.replaceChildren(image);
+          });
+        });
+
+        document.querySelectorAll('[data-gallery-form]').forEach((form) => {
+          const input = form.querySelector('[data-gallery-input]');
+          const preview = form.querySelector('[data-gallery-preview]');
+          const mainPreview = form.querySelector('.photo-preview');
+
+          if (!input || !preview || !mainPreview) return;
+
+          input.addEventListener('change', () => {
+            preview.replaceChildren();
+            const files = Array.from(input.files || [])
+              .filter((file) => file.type.startsWith('image/'));
+
+            if (!files.length) {
+              mainPreview.textContent = 'Select photos to preview your gallery';
+              return;
+            }
+
+            mainPreview.textContent = files.length + ' photo(s) selected';
+
+            files.forEach((file) => {
+              const image = document.createElement('img');
+              image.alt = 'Selected gallery photo preview';
+              image.src = URL.createObjectURL(file);
+              preview.appendChild(image);
+            });
+          });
+        });
+      })();

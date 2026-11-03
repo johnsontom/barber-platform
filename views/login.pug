@@ -1,0 +1,55 @@
+
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Log In | Barber Platform
+    link(rel="stylesheet" href="/css/styles.css")
+
+  body.auth-body
+    main.auth-layout
+      section.auth-visual
+        a.auth-brand(href="/")
+          span.brand-mark B.
+          span BARBER PLATFORM
+
+        .auth-visual-content
+          p.eyebrow WELCOME BACK
+          h1 Your style.
+            br
+            span Your community.
+          p Find your next cut, reconnect with your favourite salon, or get back to managing your business.
+
+        .auth-visual-footer
+          span BUILT FOR THE COMMUNITY
+          span EST. 2026
+
+      section.auth-form-side
+        div.auth-form-wrap
+          a.auth-mobile-brand(href="/") BARBER PLATFORM
+
+          p.eyebrow GOOD TO SEE YOU
+          h2 Welcome back.
+          p.auth-subtitle Log in to your account to continue.
+
+          if error
+            .auth-error(role="alert")= error
+
+          form.auth-form(action="/login" method="POST")
+            div.form-field
+              label(for="email") Email address
+              input#email(type="email" name="email" maxlength="190" placeholder="you@example.com" required autocomplete="email" autofocus)
+
+            div.form-field
+              label(for="password") Password
+              input#password(type="password" name="password" placeholder="Enter your password" required autocomplete="current-password")
+
+            button.auth-submit(type="submit")
+              span Log in to your account
+              span(aria-hidden="true") →
+
+          p.auth-switch New to Barber Platform? 
+            a(href="/register") Create an account
+
+          a.auth-back(href="/") ← Back to homepage
