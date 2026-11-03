@@ -29,7 +29,7 @@ manage appointments and communicate with customers through the platform.
 - Development: Docker and npm
 The exact services and integrations available depend on the current
 project configuration.
-Typical Booking Workflow
+# Typical Booking Workflow
 1. A customer creates an account or signs in.
 2. The customer browses salons, barbers and services.
 3. The customer chooses a salon appointment or requests a home visit.
@@ -43,7 +43,7 @@ Typical Booking Workflow
    customer is notified.
 9. The customer and barber can communicate through the platform.
 10. After the appointment, the customer can leave a review.
-Home Visits
+# Home Visits
 Home visits allow participating barbers to serve customers at their
 addresses. Google Maps services can be used to verify addresses and
 calculate road journeys. Travel availability and pricing depend on the
@@ -51,7 +51,7 @@ configured salon settings.
 
 The Google Maps server API key must be stored securely as an environment
 variable and must not be exposed in browser-side code.
-Project Setup
+# Project Setup
 1. Install Node.js and npm.
 2. Clone or open the project repository.
 3. Install dependencies:
@@ -77,7 +77,7 @@ The project may require configuration for:
 Use test credentials and payment-provider test mode during development.
 Configure production secrets through the hosting provider's
 environment-variable settings.
-Planned Enhancements
+# Planned Enhancements
 The following features have been discussed for future development and
 should only be described as available once implemented and tested:
 - Configurable Barber Finder booking fee.
