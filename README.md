@@ -3,7 +3,7 @@
 A location-based barbershop directory and appointment-booking platform built
 with Node.js, Express, Pug and MySQL.
 
-Booking fees, Stripe test setup, ChatGuard, database changes, test commands and the full feature file list are documented in [docs/platform-fees-chatguard.md](docs/platform-fees-chatguard.md). Fees start disabled; the confirmed £2 platform fee is collected separately from salon service and travel charges.
+
 
 ## Run with Docker
 
