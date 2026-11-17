@@ -1,0 +1,234 @@
+/* Shared theme, loaded after each page's styles. Dark keeps the existing palette. */
+:root {
+  --theme-surface-soft: #24271e;
+  --theme-gold-text: #c5a66b;
+  --theme-color-scheme: dark;
+}
+html[data-theme="light"] {
+  --theme-bg: #f7f7f2;
+  --theme-surface: #ffffff;
+  --theme-surface-soft: #eef0e8;
+  --theme-text: #20231b;
+  --theme-muted: #62685b;
+  --theme-border: #dedfd5;
+  --theme-accent: #587b18;
+  --theme-gold-text: #806027;
+  --theme-color-scheme: light;
+  --bg: var(--theme-bg);
+  --panel: var(--theme-surface);
+  --panel-soft: var(--theme-surface-soft);
+  --text: var(--theme-text);
+  --muted: var(--theme-muted);
+  --line: var(--theme-border);
+  --surface: var(--theme-surface);
+  --booking-bg: var(--theme-bg);
+  --booking-panel: var(--theme-surface);
+  --booking-text: var(--theme-text);
+  --booking-muted: var(--theme-muted);
+  --booking-line: var(--theme-border);
+  --booking-gold: var(--theme-gold-text);
+}
+html[data-theme] body { color-scheme: var(--theme-color-scheme); }
+html[data-theme="light"] .availability-page { color-scheme: light; }
+header .theme-toggle { flex-shrink: 0; }
+.admin-sidebar > .theme-toggle { align-self: flex-start; margin-bottom: 16px; }
+.page-theme-controls { display: flex; justify-content: flex-end; margin-bottom: 16px; }
+.app-topbar-inner, .portal-topbar-inner, .messaging-topbar-inner { flex-wrap: wrap; }
+
+/* White surfaces and readable text across public, account and management pages. */
+html[data-theme="light"] :is(
+  .admin-sidebar, .admin-welcome, .admin-stat-card, .admin-panel, .managed-salon,
+  .dashboard-feature-card, .dashboard-status-card, .owner-salon-card, .owner-empty-panel,
+  .owner-help-panel, .customer-booking-stat, .customer-appointment-card, .customer-bookings-notice,
+  .auth-visual, .auth-form-side, .account-option-card, .management-panel,
+  .analytics-filter, .analytics-filter-panel, .analytics-stat-card, .analytics-card,
+  .analytics-panel, .analytics-disclaimer, .add-service-panel, .service-item,
+  .service-edit-panel, .service-search, .photo-edit-section, .photo-upload-box,
+  .barber-profile-page, .barber-profile-card, .barber-review-card, .review-card,
+  .review-salon, .rating-summary, .salon-modal-dialog, .salon-modal-close,
+  .salon-message-panel, .booking-reference-search
+) {
+  background: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+html[data-theme="light"] :is(.barber-review-page, .management-page, .analytics-main) {
+  background: var(--theme-bg) !important;
+  color: var(--theme-text) !important;
+}
+html[data-theme="light"] :is(
+  .account-icon, .admin-salon-avatar, .application-avatar, .dashboard-role-badge,
+  .dashboard-card-icon, .owner-empty-symbol, .salon-icon, .service-thumbnail,
+  .salon-cover-placeholder, .salon-modal-gallery, .photo-preview, .service-image-wrap,
+  .service-image-placeholder
+) { background: var(--theme-surface-soft) !important; border-color: var(--theme-border) !important; }
+html[data-theme="light"] :is(.admin-main, .auth-layout, .management-page,
+  .barber-profile-page, .barber-review-page, .salon-modal-dialog) :is(h1, h2, h3, h4, strong, label, legend, th) {
+  color: var(--theme-text) !important;
+}
+html[data-theme="light"] :is(.admin-main, .auth-layout, .management-page,
+  .barber-profile-page, .barber-review-page) :is(p, small) { color: var(--theme-muted) !important; }
+html[data-theme="light"] :is(
+  .admin-brand, .auth-brand, .admin-back-link, .admin-edit-link, .admin-logout,
+  .application-title-row h3, .customer-appointment-top h4, .customer-appointment-details strong,
+  .account-option-text strong, .analytics-month-topline, .analytics-month-topline strong,
+  .analytics-month-topline span, .analytics-service-row strong, .analytics-table td,
+  .service-item label, .services-page label, .appointment-search > label,
+  .booking-reference-field label, .salon-message-copy h2
+) { color: var(--theme-text) !important; }
+html[data-theme="light"] :is(
+  .admin-nav-label, .admin-nav-link, .admin-sidebar-bottom, .admin-muted, .admin-stat-label,
+  .admin-stat-caption, .admin-salon-info p, .application-note, .dashboard-card-label,
+  .dashboard-footer, .dashboard-footer a, .owner-location, .owner-description, .owner-detail-label,
+  .owner-secondary-link, .customer-appointment-top p, .customer-appointment-details span,
+  .customer-booking-stat span, .auth-subtitle, .auth-switch, .auth-back, .auth-visual-footer,
+  .account-option-text small, .edit-required-note, .edit-field-hint, .edit-cancel-link,
+  .analytics-stat-caption, .analytics-month-revenue, .analytics-search-hint,
+  .analytics-pagination-summary, .analytics-stat-card .stat-label, .analytics-stat-card .admin-stat-label,
+  .service-description, .form-help, .salon-name, .barber-bio, .barber-salon-details,
+  .barber-review-subtitle, .review-comment, .review-date, .review-card small,
+  .field-hint, .review-footer, .booking-reference-help, .appointment-directions-help,
+  .salon-message-copy p, .salon-message-form span, .salon-modal-location, .salon-modal-description
+) { color: var(--theme-muted) !important; }
+html[data-theme="light"] body :is(
+  .eyebrow, .admin-welcome-tag, .dashboard-card-link, .application-email, .owner-status,
+  .admin-listing-status, .admin-status-dot, .admin-location-dot, .owner-cover-label,
+  .dashboard-status-icon, .dashboard-status-badge, .customer-appointment-reference,
+  .customer-booking-stat strong, .analytics-stat-value, .analytics-stat-card .stat-value,
+  .analytics-stat-card .stat-number, .analytics-panel .eyebrow, .analytics-card a,
+  .analytics-panel a, .admin-table th, .admin-step, .admin-count, .back-link,
+  .review-eyebrow, .salon-label, .rating-label, .review-stars, .rating-stars,
+  .star-filled, .star-button.is-active, .star-button.is-hovered, .barber-speciality,
+  .average-rating, .rating-summary .stars, .auth-visual-content h1 span, .auth-mobile-brand, .auth-switch a, .salon-icon,
+  .appointment-directions-alternative, .salon-description-toggle
+) { color: var(--theme-gold-text) !important; }
+html[data-theme="light"] .barber-profile-page a:not(.profile-button) { color: var(--theme-gold-text); }
+html[data-theme="light"] .barber-profile-page .secondary-button {
+  color: var(--theme-gold-text); border-color: var(--theme-gold-text);
+}
+html[data-theme="light"] :is(.admin-nav-link.active, .admin-nav-link:hover) {
+  background: var(--theme-surface-soft); color: var(--theme-gold-text) !important;
+}
+html[data-theme="light"] .account-option > input:checked + .account-option-card {
+  background: #f5efdf !important; border-color: #806027 !important;
+}
+html[data-theme="light"] :is(.admin-salon-list article, .admin-salon-list,
+  .admin-table, .analytics-table, .analytics-table th, .analytics-table td,
+  .customer-appointment-card, .owner-detail, .availability-day, .availability-overrides li,
+  .barber-reviews, .review-footer, .top-barber-row, .top-salon-row) {
+  border-color: var(--theme-border) !important;
+}
+
+/* Native form controls follow the chosen mode, including date and time inputs. */
+html[data-theme="light"] :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]):not([type="color"]), select, textarea) {
+  color-scheme: light;
+  background: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+html[data-theme="light"] :is(input, textarea)::placeholder { color: var(--theme-muted) !important; }
+html[data-theme="light"] :is(input, select, textarea):focus-visible {
+  outline: 2px solid var(--theme-gold-text); outline-offset: 2px;
+}
+html[data-theme="light"] :is(input[type="checkbox"], input[type="radio"]) { accent-color: var(--theme-gold-text); }
+html[data-theme="light"] :is(.availability-remove, .analytics-pagination-buttons button,
+  .analytics-pagination-buttons a) {
+  background: var(--theme-surface); border-color: var(--theme-border); color: var(--theme-text);
+}
+html[data-theme="light"] .analytics-bar-track { background: var(--theme-surface-soft) !important; }
+
+/* Booking screens have their own existing colour tokens. */
+html[data-theme="light"] .booking-page {
+  color-scheme: light;
+  --ink: var(--theme-text);
+  --ink-soft: #404738;
+  --paper: var(--theme-bg);
+  --paper-deep: var(--theme-surface-soft);
+  --white: var(--theme-surface);
+  --muted: var(--theme-muted);
+  --line: var(--theme-border);
+  --oxblood: #9c2e43;
+  --forest: #246b4a;
+  --shadow: 0 18px 55px rgb(24 20 14 / 8%);
+}
+html[data-theme="light"] .booking-page :is(.app-topbar, .portal-topbar, .app-hero) {
+  background: var(--theme-bg); color: var(--theme-text);
+}
+html[data-theme="light"] .booking-page :is(.app-brand, .app-brand-name,
+  .app-topbar-links a, .portal-who, .app-back) { color: var(--theme-text); }
+html[data-theme="light"] .booking-page .app-brand-name span { color: var(--theme-muted); }
+html[data-theme="light"] .booking-page .app-brand-mark { background: #c5a66b; color: #171510; }
+html[data-theme="light"] .booking-page .app-hero :is(.app-lede, .app-back) { color: var(--theme-muted); }
+html[data-theme="light"] .booking-page :is(.app-hero .app-eyebrow, .portal-chip) { color: var(--theme-gold-text); }
+html[data-theme="light"] .booking-page :is(.app-button-outline, .app-button-quiet,
+  .app-tab, .appointment-search-control, #clear-appointment-search) {
+  background: var(--theme-surface); color: var(--theme-text); border-color: var(--theme-border);
+}
+html[data-theme="light"] .booking-page :is(.app-button-outline:hover, .app-button-quiet:hover, .app-tab:hover) {
+  background: var(--theme-surface-soft); color: var(--theme-text); border-color: #806027;
+}
+html[data-theme="light"] .booking-page :is(.app-button-primary, .app-tab-active) {
+  background: #d6a052; border-color: #d6a052; color: #17130e;
+}
+html[data-theme="light"] .booking-page .portal-nav a.active { background: #806027; color: #fff; }
+html[data-theme="light"] .booking-page .appointment-search > label { color: var(--theme-text); }
+
+/* Salon imagery keeps its overlay; surrounding content changes to white. */
+html[data-theme="light"] .salon-profile {
+  --sp-bg: var(--theme-bg); --sp-card: var(--theme-surface); --sp-text: var(--theme-text);
+  --sp-muted: var(--theme-muted); --sp-border: var(--theme-border); --sp-accent: #587b18;
+}
+html[data-theme="light"] .salon-profile .salon-hero:not(:has(.salon-hero-image)) { background: var(--theme-surface-soft) !important; }
+html[data-theme="light"] .salon-profile .salon-hero:not(:has(.salon-hero-image))::after { background: none; }
+html[data-theme="light"] .salon-profile .salon-hero:not(:has(.salon-hero-image)) :is(h1, p) { color: var(--theme-text) !important; }
+html[data-theme="light"] .salon-profile .salon-hero:has(.salon-hero-image) h1 { color: #fff !important; }
+html[data-theme="light"] .salon-profile .salon-hero:has(.salon-hero-image) p { color: #e0e4d7 !important; }
+html[data-theme="light"] .salon-profile .salon-hero:has(.salon-hero-image) .salon-eyebrow { color: #c7ff55; }
+html[data-theme="light"] .salon-profile .service-book-link { color: #fff; }
+html[data-theme="light"] .salon-profile .service-book-link:hover { background: #466214; }
+html[data-theme="light"] .salon-profile .salon-review-submit { background: #c5a66b; color: #171510; }
+html[data-theme="light"] .salon-profile .salon-review-submit:hover { background: #d6ba83; }
+html[data-theme="light"] .photo-management {
+  --photo-bg: var(--theme-surface); --photo-text: var(--theme-text);
+  --photo-muted: var(--theme-muted); --photo-border: var(--theme-border); --photo-accent: #587b18;
+}
+html[data-theme="light"] .photo-management .photo-submit,
+html[data-theme="light"] .photo-management input[type="file"]::file-selector-button { color: #fff; }
+html[data-theme="light"] .photo-management .photo-submit:hover { background: #466214; }
+html[data-theme="light"] .photo-management .photo-field-label { color: var(--theme-text); }
+
+/* Messages use light panels and distinct outgoing bubbles. */
+html[data-theme="light"] .messaging-page {
+  --msg-bg: var(--theme-bg); --msg-panel: var(--theme-surface); --msg-panel-soft: var(--theme-surface-soft);
+  --msg-border: var(--theme-border); --msg-text: var(--theme-text); --msg-muted: var(--theme-muted);
+  --msg-accent: #806027;
+}
+html[data-theme="light"] .messaging-page :is(.messaging-topbar, .message-list, .thread-search, .chat-form) { background: var(--theme-bg); }
+html[data-theme="light"] .messaging-page :is(.thread-search-panel, .message-bubble) {
+  background: var(--theme-surface-soft); border-color: var(--theme-border); color: var(--theme-text);
+}
+html[data-theme="light"] .messaging-page :is(.conversation-avatar, .thread-avatar, .message-avatar) { background: var(--theme-surface-soft); }
+html[data-theme="light"] .messaging-page :is(.messaging-search button, .thread-search button,
+  .chat-send, .messaging-primary-link, .message-row-mine .message-bubble) {
+  background: #c5a66b; border-color: #c5a66b; color: #171510;
+}
+html[data-theme="light"] .messaging-page :is(.messaging-outline-link, .thread-search-result p) { color: var(--theme-text); }
+html[data-theme="light"] .messaging-page :is(.message-date, .message-time, .chat-status, .messaging-footer) { color: var(--theme-muted); }
+html[data-theme="light"] .messaging-page .message-row-mine .message-time { color: #35352c; }
+html[data-theme="light"] .messaging-page .message-date::before,
+html[data-theme="light"] .messaging-page .message-date::after { background: var(--theme-border); }
+
+/* Keep status colours meaningful and legible on white backgrounds. */
+html[data-theme="light"] body :is(.status-confirmed, .status-active, .availability-notice, .messaging-alert-success) {
+  background: #e5f2ea !important; color: #246b4a !important; border-color: #b6d7c2 !important;
+}
+html[data-theme="light"] body :is(.status-pending, .status-ongoing, .application-pending, .portal-chip) {
+  background: #fff2d4 !important; color: #795919 !important; border-color: #e6d2a7 !important;
+}
+html[data-theme="light"] body :is(.status-completed) { background: #eef0e8 !important; color: #404738 !important; }
+html[data-theme="light"] body :is(.status-cancelled, .status-rejected, .application-reject,
+  .auth-error, .barber-message-error, .availability-error, .messaging-alert-error) {
+  background: #fff0ed !important; color: #9c2e43 !important; border-color: #e6beb9 !important;
+}
+html[data-theme="light"] body :is(.booking-reference-error, .customer-cancel-button, .dashboard-status-badge.rejected) { color: #9c2e43 !important; }
+html[data-theme="light"] .admin-main .booking-reference-error { color: #9c2e43 !important; }
