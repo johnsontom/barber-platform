@@ -1,0 +1,384 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    meta(name="description" content="Message your barber or salon manager and keep every conversation in one place.")
+    title= title || "Messages | Barber Finder"
+    link(rel="stylesheet" href="/css/styles.css")
+    link(rel="stylesheet" href="/css/platform.css")
+
+    include partials/theme-head
+
+  body.messaging-page
+    header.messaging-topbar
+      .messaging-container.messaging-topbar-inner
+        a.messaging-brand(href="/")
+          span.messaging-brand-mark B.
+          span.messaging-brand-name Barber Finder
+        nav.messaging-nav(aria-label="Messaging navigation")
+          a(href="/dashboard") Dashboard
+          if user.role === "customer"
+            a(href="/appointments") My appointments
+          else
+            a(href="/appointments/manage") Manage appointments
+          form(action="/logout" method="POST")
+            button.messaging-logout(type="submit") Log out
+
+          include partials/theme-toggle
+
+    main.messaging-container.messaging-layout
+      aside.messaging-sidebar
+        .messaging-sidebar-head
+          p.messaging-eyebrow= user.role === "barber" ? "SALON OWNER INBOX" : "YOUR CONVERSATIONS"
+          h1 Messages
+          p.messaging-muted= user.role === "barber" ? "Talk directly with customers about their visit." : "Questions, style references, and visit details, all in one thread."
+
+        form.messaging-search(action="/messages" method="GET" role="search")
+          label.messaging-visually-hidden(for="conversation-search") Search all messages
+          input#conversation-search(
+            type="search"
+            name="q"
+            value=selectedConversation ? "" : query
+            maxlength="120"
+            placeholder="Search salons, people, or messages"
+            autocomplete="off"
+          )
+          button(type="submit") Search
+          if query && !selectedConversation
+            a.messaging-search-clear(href="/messages") Clear
+
+        if query && !selectedConversation
+          .messaging-search-summary
+            strong= conversations.length + (conversations.length === 1 ? " conversation" : " conversations")
+            span= " matched “" + query + "”"
+
+        .conversation-list
+          if conversations.length
+            each conversation in conversations
+              a.conversation-item(
+                class=selectedConversation && selectedConversation.id === conversation.id ? "is-active" : ""
+                href="/messages/" + conversation.id
+                aria-current=selectedConversation && selectedConversation.id === conversation.id ? "page" : false
+              )
+                span.conversation-avatar= conversation.initials
+                .conversation-content
+                  .conversation-heading
+                    strong= conversation.otherName
+                    if conversation.unreadCount
+                      span.conversation-unread= conversation.unreadCount
+                  span.conversation-subtitle= conversation.subtitle
+                  if conversation.matchSnippet
+                    p.conversation-match
+                      span.messaging-match-label Match
+                      | #{conversation.matchSnippet}
+                  else
+                    p.conversation-last
+                      if conversation.lastSenderIsMe
+                        span.messaging-you You:
+                      | #{conversation.lastMessage}
+                time.conversation-time= conversation.lastMessageAtLabel
+          else
+            .conversation-empty
+              if query
+                strong No conversations found
+                p Try a salon name, customer name, or a phrase from a message.
+                a(href="/messages") Clear search
+              else
+                strong No messages yet
+                if user.role === "customer"
+                  p Open a salon profile and choose “Message salon” to start a conversation.
+                  a(href="/") Discover salons
+                else
+                  p Customer conversations will appear here when they message your salon.
+
+      section.messaging-thread
+        if selectedConversation
+          header.thread-header
+            .thread-person
+              span.thread-avatar= selectedConversation.otherInitials
+              div
+                p.messaging-eyebrow= selectedConversation.viewerRole === "manager" ? "CUSTOMER CONVERSATION" : "SALON CONVERSATION"
+                h2= selectedConversation.otherName
+                p.messaging-muted= selectedConversation.otherSubtitle
+            .thread-actions
+              if selectedConversation.viewerRole === "customer"
+                a.messaging-outline-link(href="/salons/" + selectedConversation.salon_id) View salon
+              else
+                a.messaging-outline-link(href="/appointments/manage") Appointments
+
+          form.thread-search(action="/messages/" + selectedConversation.id method="GET" role="search")
+            label.messaging-visually-hidden(for="thread-search") Search this conversation
+            input#thread-search(
+              type="search"
+              name="q"
+              value=query
+              maxlength="120"
+              placeholder="Search this conversation"
+              autocomplete="off"
+            )
+            button(type="submit") Find
+            if query
+              a.messaging-search-clear(href="/messages/" + selectedConversation.id) Clear
+
+          if notice === "sent"
+            p.messaging-alert.messaging-alert-success(role="status") Message sent.
+          if error
+            p.messaging-alert.messaging-alert-error(role="alert")= error
+
+          if query
+            .thread-search-panel
+              .thread-search-heading
+                strong= searchCount + (searchCount === 1 ? " matching message" : " matching messages")
+                span= " for “" + query + "”"
+              if searchMatches.length
+                .thread-search-results
+                  each match in searchMatches
+                    a.thread-search-result(href="#message-" + match.id)
+                      span.thread-search-result-meta
+                        strong= match.senderName
+                        time= match.dateLabel + " · " + match.timeLabel
+                      p= match.snippet
+                if searchCount > searchMatches.length
+                  p.thread-search-limit Showing the most recent #{searchMatches.length} matches.
+              else
+                p.thread-search-empty No messages in this conversation contain that phrase.
+
+          .message-list#message-list(
+            data-last-id=lastMessageId
+            data-feed-url="/messages/" + selectedConversation.id + "/feed"
+            aria-live="polite"
+          )
+            if messages.length
+              each message in messages
+                if message.showDate
+                  .message-date= message.dateLabel
+                article.message-row(
+                  class=message.mine ? "message-row-mine" : "message-row-theirs"
+                  id="message-" + message.id
+                  data-message-id=message.id
+                )
+                  if !message.mine
+                    span.message-avatar= selectedConversation.viewerRole === "manager" ? selectedConversation.otherInitials : message.senderName.split(/\s+/).map(part => part.charAt(0)).join("").slice(0, 2).toUpperCase()
+                  .message-bubble
+                    if !message.mine
+                      span.message-sender= message.senderName
+                    p.message-body
+                      each segment in message.segments
+                        if segment.match
+                          mark= segment.text
+                        else
+                          = segment.text
+                    time.message-time(datetime=message.createdAtIso)= message.timeLabel
+            else
+              .thread-empty
+                span.thread-empty-mark B.
+                h3 Start the conversation
+                p= selectedConversation.viewerRole === "manager" ? "Reply to " + selectedConversation.otherName + " and help them prepare for their visit." : "Ask about a service, share a style reference, or tell the salon anything they should know."
+
+          form#chat-form.chat-form(
+            action="/messages/" + selectedConversation.id + "/messages"
+            method="POST"
+          )
+            label.messaging-visually-hidden(for="chat-body") Message
+            textarea#chat-body(
+              name="body"
+              rows="3"
+              maxlength="4000"
+              placeholder=selectedConversation.viewerRole === "manager" ? "Reply to " + selectedConversation.otherName : "Write a message to " + selectedConversation.otherName
+              required
+            )
+            .chat-form-footer
+              input(type="hidden" name="platform_token" value=platformToken)
+              span#chat-status.chat-status(role="status") Messages are saved automatically.
+              button.chat-send(type="submit" disabled) Send message
+            p.chat-status Barber Finder ChatGuard checks messages locally for contact details and external booking arrangements.
+            a(href="/privacy/chatguard") Chat privacy and moderation
+            |  · 
+            a(href="/chatguard/appeals") Challenge a moderation decision
+            button#chat-warning-continue.chat-send(type="button" hidden) I mean a normal service discussion — send
+        else
+          .messaging-welcome
+            span.messaging-welcome-mark B.
+            p.messaging-eyebrow= user.role === "barber" ? "CUSTOMER CARE" : "DIRECT TO THE SALON"
+            h2= user.role === "barber" ? "Your customer conversations live here." : "Questions before your visit?"
+            p= user.role === "barber" ? "Choose a customer from the inbox to read the full history and reply." : "Choose a conversation from the inbox, or open a salon profile and start a new one."
+            a.messaging-primary-link(href=user.role === "customer" ? "/" : "/appointments/manage")= user.role === "customer" ? "Browse salons" : "Review appointments"
+
+    footer.messaging-footer
+      .messaging-container.messaging-footer-inner
+        span
+          strong B.
+          |  Barber Finder
+        span Private messages between customers and salon managers.
+    include partials/live-notifications
+
+    if selectedConversation
+      script.
+        (() => {
+          const form = document.getElementById("chat-form");
+          const input = document.getElementById("chat-body");
+          const send = form && form.querySelector(".chat-send");
+          const status = document.getElementById("chat-status");
+          const list = document.getElementById("message-list");
+
+          if (!form || !input || !send || !list) return;
+
+          let lastId = Number(list.dataset.lastId || "0");
+          let polling = false;
+          let requestId = crypto.randomUUID();
+          let warningAcknowledged = false;
+          const warningContinue = document.getElementById("chat-warning-continue");
+          warningContinue.addEventListener("click", () => { warningAcknowledged = true; warningContinue.hidden = true; form.requestSubmit(); });
+          const feedUrl = list.dataset.feedUrl;
+
+          const scrollToLatest = () => {
+            list.scrollTop = list.scrollHeight;
+          };
+
+          const shortInitials = name => String(name || "?")
+            .split(/\s+/)
+            .filter(Boolean)
+            .slice(0, 2)
+            .map(part => part.charAt(0).toUpperCase())
+            .join("");
+
+          const setStatus = text => {
+            if (status) status.textContent = text;
+          };
+
+          const appendMessage = message => {
+            if (document.querySelector(`[data-message-id="${message.id}"]`)) return;
+
+            const lastDate = Array.from(list.querySelectorAll(".message-date")).pop();
+            if (!lastDate || lastDate.textContent !== message.dateLabel) {
+              const heading = document.createElement("div");
+              heading.className = "message-date";
+              heading.textContent = message.dateLabel;
+              list.appendChild(heading);
+            }
+
+            const row = document.createElement("article");
+            row.className = `message-row ${message.mine ? "message-row-mine" : "message-row-theirs"}`;
+            row.id = `message-${message.id}`;
+            row.dataset.messageId = message.id;
+
+            if (!message.mine) {
+              const avatar = document.createElement("span");
+              avatar.className = "message-avatar";
+              avatar.textContent = shortInitials(message.senderName);
+              row.appendChild(avatar);
+            }
+
+            const bubble = document.createElement("div");
+            bubble.className = "message-bubble";
+
+            if (!message.mine) {
+              const sender = document.createElement("span");
+              sender.className = "message-sender";
+              sender.textContent = message.senderName;
+              bubble.appendChild(sender);
+            }
+
+            const body = document.createElement("p");
+            body.className = "message-body";
+            body.textContent = message.body;
+            bubble.appendChild(body);
+
+            const time = document.createElement("time");
+            time.className = "message-time";
+            time.dateTime = message.createdAtIso;
+            time.textContent = message.timeLabel;
+            bubble.appendChild(time);
+            row.appendChild(bubble);
+            list.appendChild(row);
+            lastId = Math.max(lastId, Number(message.id));
+            scrollToLatest();
+          };
+
+          const refresh = async () => {
+            if (polling || document.hidden) return;
+            polling = true;
+
+            try {
+              const response = await fetch(`${feedUrl}?after=${lastId}`, {
+                headers: { Accept: "application/json" },
+                credentials: "same-origin"
+              });
+
+              if (!response.ok) return;
+
+              const data = await response.json();
+
+              if (Array.isArray(data.messages)) {
+                data.messages.forEach(appendMessage);
+                if (data.messages.length) window.dispatchEvent(new Event("live:messages-changed"));
+              }
+            } catch {
+              setStatus("Live refresh paused. Send a message or reload to reconnect.");
+            } finally {
+              polling = false;
+            }
+          };
+
+          input.addEventListener("input", () => {
+            requestId = crypto.randomUUID();
+            warningAcknowledged = false;
+            warningContinue.hidden = true;
+            send.disabled = input.value.trim().length === 0;
+            setStatus("Messages are saved automatically.");
+          });
+
+          input.addEventListener("keydown", event => {
+            if (event.key === "Enter" && !event.shiftKey) {
+              event.preventDefault();
+              if (!send.disabled) form.requestSubmit();
+            }
+          });
+
+          form.addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const body = input.value.trim();
+            if (!body) return;
+
+            send.disabled = true;
+            send.textContent = "Sending…";
+            setStatus("Sending message…");
+
+            try {
+              const response = await fetch(form.action, {
+                method: "POST",
+                body: new URLSearchParams({ body, platform_token: form.elements.platform_token.value, request_id: requestId, warning_acknowledged: String(warningAcknowledged) }),
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/x-www-form-urlencoded"
+                },
+                credentials: "same-origin"
+              });
+              const data = await response.json().catch(() => ({}));
+
+              if (!response.ok) {
+                warningContinue.hidden = data.moderation?.level !== "warning";
+                throw new Error(data.error || "Unable to send that message.");
+              }
+
+              input.value = "";
+              requestId = crypto.randomUUID();
+              warningAcknowledged = false;
+              warningContinue.hidden = true;
+              appendMessage(data.message);
+              window.dispatchEvent(new Event("live:messages-changed"));
+              setStatus("Message sent.");
+              send.textContent = "Send message";
+            } catch (error) {
+              setStatus(error.message || "Unable to send that message.");
+              send.disabled = false;
+              send.textContent = "Send message";
+            }
+          });
+
+          send.disabled = input.value.trim().length === 0;
+          scrollToLatest();
+          window.setInterval(refresh, 5000);
+        })();

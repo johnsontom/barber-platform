@@ -1,0 +1,60 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    meta(name="robots" content="noindex, nofollow")
+    title= title
+    link(rel="stylesheet" href="/css/styles.css")
+    link(rel="stylesheet" href="/css/password-reset.css")
+    include partials/theme-head
+
+  body.auth-body
+    main.auth-layout
+      section.auth-visual
+        a.auth-brand(href="/")
+          span.brand-mark B.
+          span Barber Finder
+        .auth-visual-content
+          p.eyebrow YOUR ACCOUNT
+          h1 One last step.
+            br
+            span Your community awaits.
+          p Confirm your email address to access your bookings or salon dashboard.
+        .auth-visual-footer
+          span BARBER FINDER
+          span EMAIL VERIFICATION
+
+      section.auth-form-side
+        .auth-form-wrap
+          a.auth-mobile-brand(href="/") Barber Finder
+          p.eyebrow EMAIL VERIFICATION
+          h2= confirm ? "Confirm your email" : "Verify your email"
+          include partials/theme-toggle
+          if error
+            .auth-error(role="alert")= error
+          if invalid
+            .auth-error(role="alert") This verification link is invalid, expired or already used. Log in to request a new link.
+          else if confirm
+            p.auth-subtitle Select Verify email to confirm your address, then log in to your account.
+            form.auth-form(action="/verify-email/confirm" method="POST")
+              input(type="hidden" name="csrf_token" value=csrfToken)
+              button.auth-submit(type="submit") Verify email
+          else if pending
+            p.auth-subtitle
+              | Account email: 
+              strong= email
+            if sent
+              .auth-notice(role="status")
+                | Check your inbox and spam folder for the verification link sent to 
+                strong= email
+                | .
+            p.auth-subtitle You need to verify your email before accessing the dashboard. Links expire after 24 hours and work once.
+            form.auth-form(action="/verify-email/resend" method="POST")
+              input(type="hidden" name="csrf_token" value=csrfToken)
+              button.auth-submit(type="submit") Resend verification email
+            p.field-hint Please wait a minute between emails. A new link replaces the previous one.
+            p.field-hint Salon managers also need administrator approval to manage their salon.
+          else
+            p.auth-subtitle Log in with your email and password to resend verification. If you have already verified, you can access your dashboard after login.
+          a.auth-reset-link(href="/login") Back to login

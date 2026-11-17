@@ -1,0 +1,65 @@
+
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Log In | Barber Finder
+    link(rel="stylesheet" href="/css/styles.css")
+    link(rel="stylesheet" href="/css/password-reset.css")
+
+    include partials/theme-head
+
+  body.auth-body
+    main.auth-layout
+      section.auth-visual
+        a.auth-brand(href="/")
+          span.brand-mark B.
+          span Barber Finder
+
+        .auth-visual-content
+          p.eyebrow WELCOME BACK
+          h1 Your style.
+            br
+            span Your community.
+          p Find your next cut, reconnect with your favourite salon, or get back to managing your business.
+
+        .auth-visual-footer
+          span BUILT FOR THE COMMUNITY
+          span EST. 2026
+
+      section.auth-form-side
+        div.auth-form-wrap
+          a.auth-mobile-brand(href="/") Barber Finder
+
+          p.eyebrow GOOD TO SEE YOU
+          h2 Welcome back.
+          include partials/theme-toggle
+          p.auth-subtitle Log in as a customer or salon manager to continue.
+
+          if error
+            .auth-error(role="alert")= error
+          if success
+            .auth-notice(role="status")= success
+
+          form.auth-form(action="/login" method="POST")
+            div.form-field
+              label(for="email") Email address
+              input#email(type="email" name="email" maxlength="190" placeholder="you@example.com" required autocomplete="email" autofocus)
+
+            div.form-field
+              label(for="password") Password
+              input#password(type="password" name="password" placeholder="Enter your password" required autocomplete="current-password")
+
+            a.auth-reset-link(href="/forgot-password") Forgot password?
+
+            button.auth-submit(type="submit")
+              span Log in to your account
+              span(aria-hidden="true") →
+
+          p.auth-switch New to Barber Finder? 
+            a(href="/register") Create an account
+          if verificationEnabled
+            a.auth-reset-link(href="/verify-email") Verify email / Resend verification
+
+          a.auth-back(href="/") ← Back to homepage
