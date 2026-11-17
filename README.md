@@ -52,6 +52,18 @@ configured salon settings.
 The Google Maps server API key must be stored securely as an environment
 variable and must not be exposed in browser-side code.
 # Project Setup
+The publishing copy has its own Docker Compose project,
+`barber-platform-publishing`. Its read-only schema mount uses
+`./database/schema.sql` in this repository, and its database volume is
+`barber-platform-publishing_barber_mysql_data`.
+
+To start this copy's database, run `docker compose up -d --wait mysql` from
+the repository folder. MySQL uses host port `3308` (`DB_PORT=3308` for an app
+connecting from Windows); phpMyAdmin uses `http://localhost:8081` when started
+with `docker compose up -d phpmyadmin`. This keeps the primary working copy's
+database on port `3306` separate. Use the database credentials configured in
+this copy's `docker-compose.yml` in your local `.env`.
+
 1. Install Node.js and npm.
 2. Clone or open the project repository.
 3. Install dependencies:

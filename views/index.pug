@@ -1,0 +1,689 @@
+- const enabledCategories = typeof categories === "undefined" ? [] : categories
+- const currentCategory = typeof selectedCategory === "undefined" ? null : selectedCategory
+- const barberOnly = currentCategory ? currentCategory.slug === "barbers" : enabledCategories.length === 1 && enabledCategories[0].slug === "barbers"
+- const teamTitle = currentCategory ? currentCategory.staff_plural : barberOnly ? "Barbers" : "Professionals"
+doctype html
+html(lang="en")
+   head
+      meta(charset="UTF-8")
+      meta(name="viewport" content="width=device-width, initial-scale=1")
+      meta(name="description" content="Discover local salons, compare services and book your next appointment.")
+      title= title
+      link(rel="preconnect" href="https://fonts.googleapis.com")
+      link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
+      link(href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet")
+      link(rel="stylesheet" href="/css/styles.css")
+      link(rel="stylesheet" href="/css/service-categories.css")
+      style.
+         .top-barbers-section .top-barbers-list { border-top: 1px solid #303229; }
+         .top-barbers-section .top-barber-row {
+            display: grid;
+            grid-template-columns: 36px 48px minmax(180px, 1fr) minmax(170px, 260px) auto;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 8px;
+            border-bottom: 1px solid #303229;
+         }
+         .top-barbers-section .top-barber-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            background: #24241f;
+            border: 1px solid #454438;
+         }
+         .top-barbers-section .top-barber-avatar-fallback {
+            display: grid;
+            place-items: center;
+            color: #c5a66b;
+            font-weight: 800;
+            font-size: 15px;
+         }
+         .top-barbers-section .top-barber-info h3 { margin: 0 0 4px; }
+         .top-barbers-section .top-barber-info p,
+         .top-barbers-section .top-barber-salon { margin: 0 0 3px; }
+         .top-barbers-section .top-barber-comment {
+            color: #c8c5bb;
+            font-size: 12px;
+            line-height: 1.5;
+            max-width: 260px;
+            overflow-wrap: anywhere;
+            animation: barberCommentPulse 6s ease-in-out infinite;
+         }
+         .top-barbers-section .top-barber-comment-label {
+            display: block;
+            color: #c5a66b;
+            text-transform: uppercase;
+            font-size: 9px;
+            letter-spacing: 1.2px;
+            margin-bottom: 5px;
+         }
+         .top-barbers-section .top-barber-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            white-space: nowrap;
+         }
+         .top-barbers-section .top-barber-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #f5f3ed;
+         }
+         .top-barbers-section .top-barber-rating small {
+            color: #a5a69e;
+            font-size: 11px;
+         }
+         .top-barbers-section .top-barber-link {
+            color: #c5a66b;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+         }
+         .top-barbers-section .top-barber-link:hover { color: #e0c38b; }
+         .top-salons-section { padding: 70px 7.2%; border-top: 1px solid #303229; }
+         .top-salons-section .top-salons-list { border-top: 1px solid #303229; }
+         .top-salons-section .top-salon-row {
+            display: grid;
+            grid-template-columns: 36px 72px minmax(0, 1fr) minmax(150px, 230px) auto;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 8px;
+            border-bottom: 1px solid #303229;
+         }
+         .top-salons-section .top-salon-image {
+            width: 72px; height: 58px; border-radius: 8px; object-fit: cover;
+            display: block; background: #24241f; border: 1px solid #454438;
+         }
+         .top-salons-section .top-salon-image-fallback {
+            display: grid; place-items: center; color: #c5a66b; font-weight: 800;
+            font-size: 12px; text-align: center; overflow: hidden; padding: 4px;
+         }
+         .top-salons-section .top-salon-info h3 { margin: 0 0 5px; }
+         .top-salons-section .top-salon-info p { margin: 0 0 4px; color: #a5a69e; font-size: 12px; }
+         .top-salons-section .top-salon-description { color: #c8c5bb !important; line-height: 1.5; }
+         .top-salons-section .top-salon-rating { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; white-space: nowrap; }
+         .top-salons-section .top-salon-rating strong { color: #f5f3ed; }
+         .top-salons-section .top-salon-rating small { color: #a5a69e; font-size: 11px; }
+         .top-salons-section .top-salon-stars { color: #c5a66b; }
+         .top-salons-section .top-salon-link { color: #c5a66b; text-decoration: none; font-size: 12px; font-weight: 700; white-space: nowrap; }
+         .top-salons-section .top-salon-link:hover { color: #e0c38b; }
+         @media (max-width: 760px) {
+            .top-salons-section { padding: 54px 4%; }
+            .top-salons-section .top-salon-row { grid-template-columns: 28px 58px minmax(0, 1fr) auto; gap: 10px; }
+            .top-salons-section .top-salon-image { width: 58px; height: 52px; }
+            .top-salons-section .top-salon-rating { grid-column: 3; grid-row: 2; align-items: flex-start; flex-direction: row; gap: 6px; }
+            .top-salons-section .top-salon-link { grid-column: 4; grid-row: 2; }
+         }
+         @media (max-width: 480px) {
+            .top-salons-section .top-salon-row { grid-template-columns: 24px 48px minmax(0, 1fr); gap: 9px; }
+            .top-salons-section .top-salon-image { width: 48px; height: 48px; }
+            .top-salons-section .top-salon-rating, .top-salons-section .top-salon-link { grid-column: 3; grid-row: auto; }
+            .top-salons-section .top-salon-rating { align-items: flex-start; }
+         }
+         @keyframes barberCommentPulse {
+            0%, 12% { opacity: 0; transform: translateY(5px); }
+            20%, 75% { opacity: 1; transform: translateY(0); }
+            88%, 100% { opacity: 0; transform: translateY(-4px); }
+         }
+         @media (max-width: 760px) {
+            .top-barbers-section .top-barber-row {
+               grid-template-columns: 28px 42px minmax(0, 1fr) auto;
+               gap: 10px;
+            }
+            .top-barbers-section .top-barber-avatar { width: 42px; height: 42px; }
+            .top-barbers-section .top-barber-comment {
+               grid-column: 3 / -1;
+               grid-row: 2;
+               max-width: none;
+            }
+            .top-barbers-section .top-barber-actions {
+               grid-column: 4;
+               grid-row: 1;
+            }
+         }
+         @media (max-width: 480px) {
+            .top-barbers-section .top-barber-row { grid-template-columns: 24px 38px minmax(0, 1fr); }
+            .top-barbers-section .top-barber-avatar { width: 38px; height: 38px; }
+            .top-barbers-section .top-barber-actions {
+               grid-column: 3;
+               grid-row: 3;
+               flex-direction: row;
+               justify-content: flex-start;
+               align-items: center;
+            }
+            .top-barbers-section .top-barber-comment { grid-column: 2 / -1; }
+         }
+      include partials/theme-head
+
+   body
+      .site-shell
+         header.navbar
+            a.brand(href="/" aria-label="Barber Finder home")
+               span.brand-mark B.
+               span.brand-name BARBER #[span.brand-light FINDER]
+            nav.nav-links(aria-label="Main navigation")
+               a(href="#discover") Discover
+               a(href="#how-it-works") How it works
+               a(href="#for-barbers") For salon managers
+               a(href="/about") About Us
+               a(href="/forum") Forum
+            .nav-actions
+            if currentUser
+               a.nav-account(
+                  href="/dashboard"
+                  aria-label=(currentUser.role === "admin" ? "Administrator dashboard" : currentUser.role === "barber" ? "Salon manager dashboard" : "Customer account")
+                  title=(currentUser.role === "admin" ? "Administrator" : currentUser.role === "barber" ? "Salon manager" : "My account")
+               )
+                     if currentUser.role === "admin"
+                        span.nav-account-icon(aria-hidden="true") ♙
+                        span.nav-account-label Admin
+                     else if currentUser.role === "barber"
+                        span.nav-account-icon(aria-hidden="true") ✂
+                        span.nav-account-label Manager
+                     else
+                        span.nav-account-icon(aria-hidden="true") ♙
+                        span.nav-account-label Account
+
+
+            else
+               a.nav-login(href="/login") Log in
+            include partials/theme-toggle
+            a.button.button-small(href="#salon-search-form") Find a barber
+
+         main
+         section.location-bar#location-bar
+            .location-bar-inner
+               .location-bar-heading
+                  span.location-bar-pin ◉
+                  .location-bar-copy
+                     strong= barberOnly ? "Find barbers near you" : "Find salons near you"
+                     span#location-status(aria-live="polite") Use your current location or enter an area.
+               form.location-bar-form(action="/" method="get" id="location-bar-form")
+                  label.location-bar-input-label(for="location-area") Your location
+                  input#location-area(
+                     type="text"
+                     name="location"
+                     placeholder="Postcode, town or area"
+                     value=location || ""
+                     autocomplete="postal-code"
+                  )
+                  input#location-lat(type="hidden" name="lat" value=userLat || "")
+                  input#location-lng(type="hidden" name="lng" value=userLng || "")
+                  input#location-service(type="hidden" name="service" value=service || "")
+                  input(type="hidden" name="category" value=typeof category === "undefined" ? "" : category)
+                  button.location-bar-button(type="submit") Search area
+                  button.location-current-button(type="button" id="location-current-button") Use my location
+            section.hero
+               .hero-copy
+                  .eyebrow
+                     span.eyebrow-dot
+                     | #{barberOnly ? "THE NEXT GENERATION OF GROOMING" : "LOCAL EXPERTS. TIME FOR YOU."}
+                  h1= barberOnly ? "Your next cut." : "Your next treatment."
+                     br
+                     span= barberOnly ? "Your kind of barber." : "Your kind of salon."
+                  p.hero-description
+                     | Discover local #{barberOnly ? "barbers" : "salons"}, compare their services, and book a time that works for your life.
+                  form.search-panel(action="/" method="get" id="salon-search-form")
+                     label.search-field
+                        span.field-icon
+                           | ⌕
+                        span.field-content
+                           span.field-label Search salons, services & prices
+                           input(
+                              type="search"
+                              name="q"
+                              placeholder=barberOnly ? "Try skin fade, beard trim, or a salon name..." : "Search a treatment or salon name..."
+                              value=q || ""
+                              aria-label="Search salons and services"
+                           )
+                     input(type="hidden" name="category" value=typeof category === "undefined" ? "" : category)
+                     button.button.search-button(type="submit") Search
+                  .hero-proof
+                     .proof-avatars(aria-hidden="true")
+                        span.avatar.avatar-one J
+                        span.avatar.avatar-two M
+                        span.avatar.avatar-three A
+                     p #[strong Local experts, great people.] #[br] Find your local favourite.
+               .hero-visual
+                  .visual-glow
+                  .visual-label.visual-label-top
+                     span.status-dot
+                     | 3D EXPERIENCE
+                  #barber-scene(aria-label="Animated 3D barber chair with floating scissors and straight razor")
+                     .scene-fallback
+                        .fallback-pole
+                           span
+                           span
+                           span
+                  .floating-card.floating-card-top
+                     span.card-icon ✦
+                     span
+                        strong Your style, your choice
+                        small Discover skilled local barbers
+                  .floating-card.floating-card-bottom
+                     .mini-stars ★★★★★
+                     strong The right cut is closer than you think
+                  .visual-caption
+                     span 01 / DISCOVER YOUR STYLE
+                     span SCROLL TO EXPLORE ↓
+            section.stats-strip(aria-label="Finder highlights")
+               .stat-item
+                  strong 01
+                  span Find local experts near you
+               .stat-item
+                  strong 02
+                  span Compare services *&* prices
+               .stat-item
+                  strong 03
+                  span Book on your schedule
+               .stat-item
+                  strong 04
+                  span Enjoy your appointment
+            section.discover-section#discover
+               .section-heading
+                  .section-heading-copy
+                     .eyebrow.section-eyebrow MADE FOR YOUR NEXT LOOK
+                     h2 Find your next appointment
+                  p.section-intro Compare nearby salons, explore their services and meet the team.
+               nav.category-nav(aria-label="Business categories")
+                  if enabledCategories.length > 1
+                     a.category-chip(class=!currentCategory ? "is-active" : "" href=categoryUrl("")) All categories
+                  each item in enabledCategories
+                     a.category-chip(class=currentCategory && currentCategory.slug === item.slug || enabledCategories.length === 1 ? "is-active" : "" href=categoryUrl(item.slug))= item.name
+               #salon-results
+                  each group in categoryGroups
+                     section.category-group(id="category-" + group.slug data-category=group.slug)
+                        .category-group-heading
+                           div
+                              h3= group.name
+                              p= group.description
+                           span= group.salons.length + (group.salons.length === 1 ? " salon" : " salons")
+                        .salon-grid
+                           if group.salons.length
+                              each salon, i in group.salons
+                                 article.salon-card(
+                                    data-salon-card
+                                    data-salon-id=salon.id
+                                    data-salon-name=salon.name
+                                    data-salon-city=salon.city
+                                    data-salon-address=salon.address
+                                    data-salon-description=salon.description || ""
+                                    data-salon-cover=salon.cover_image || ""
+                                    data-salon-gallery=JSON.stringify(salon.galleryImages || [])
+                                    tabindex="0"
+                                    role="button"
+                                    aria-label="View photos of " + salon.name
+                                 )
+                                    .salon-image(class="salon-image-" + ((i % 3) + 1))
+                                       if salon.cover_image
+                                          img.salon-cover(
+                                             src=salon.cover_image
+                                             alt=salon.name + " cover photo"
+                                             loading="lazy"
+                                          )
+                                       else
+                                          .salon-cover-placeholder
+                                             span= salon.name
+                                       span.salon-tag= group.name
+
+                                    .salon-card-body
+                                       .salon-title-row
+                                          h3= salon.name
+                                          span.rating= salon.city
+
+                                       p.salon-location
+                                          | ◉ #{salon.address}, #{salon.city}
+
+                                       if salon.distanceMiles !== null && salon.distanceMiles !== undefined
+                                          p.salon-distance
+                                             | #{salon.distanceMiles.toFixed(1)} miles away
+
+                                       .salon-description-wrap
+                                          p.salon-description= salon.description || "Discover services at this salon."
+                                          button.salon-description-toggle(
+                                             type="button"
+                                             hidden
+                                             aria-expanded="false"
+                                          ) See more
+
+                                       .salon-meta
+                                          span= salon.city
+                                          span Profile details
+
+                                       a.salon-link(href="/salons/" + salon.id)
+                                          | Explore salon
+                                          span(aria-hidden="true") ↗
+                           else
+                              p.category-empty= q || location || service ? "No salons match your search in this category." : "No salons listed in this category yet. Check back soon."
+                  if !categoryGroups.length
+                     p.category-empty No services are available right now. Please check back soon.
+
+            div.salon-modal#salonModal(
+               hidden
+               aria-hidden="true"
+            )
+               div.salon-modal-backdrop(data-close-salon-modal)
+               section.salon-modal-dialog(
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="salonModalTitle"
+                  tabindex="-1"
+               )
+                  button.salon-modal-close(
+                     type="button"
+                     aria-label="Close salon preview"
+                     data-close-salon-modal
+                  ) ×
+                  div.salon-modal-gallery
+                     img#salonModalImage(
+                        src=""
+                        alt=""
+                     )
+                     button.salon-modal-arrow.salon-modal-prev(
+                        type="button"
+                        aria-label="Previous photo"
+                     ) ‹
+                     button.salon-modal-arrow.salon-modal-next(
+                        type="button"
+                        aria-label="Next photo"
+                     ) ›
+                     span#salonModalCounter.salon-modal-counter
+                  div.salon-modal-content
+                     p.salon-modal-eyebrow SALON PREVIEW
+                     h2#salonModalTitle
+                     p#salonModalLocation.salon-modal-location
+                     p#salonModalDescription.salon-modal-description
+                     div#salonModalThumbnails.salon-modal-thumbnails
+                     a#salonModalExplore.salon-modal-explore(href="/") Explore Services →
+            section.top-barbers-section
+               .section-heading
+                  .section-heading-copy
+                     .eyebrow.section-eyebrow COMMUNITY FAVOURITES
+                     h2= "Top 5 Rated " + teamTitle
+                  p.section-intro
+                     | The #{teamTitle.toLowerCase()} customers rate highest, based on real reviews.
+               if topBarbers && topBarbers.length
+                  .top-barbers-list
+                     each barber, i in topBarbers
+                        article.top-barber-row
+                           span.top-barber-rank= String(i + 1).padStart(2, "0")
+                           if barber.profile_image
+                              img.top-barber-avatar(src=barber.profile_image alt=barber.full_name + " profile photo" loading="lazy")
+                           else
+                              .top-barber-avatar.top-barber-avatar-fallback(aria-label=barber.full_name + " profile placeholder")= String(barber.full_name || "B").split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase()
+                           .top-barber-info
+                              h3= barber.full_name
+                              p= barber.speciality || "Salon professional"
+                              span.top-barber-salon= barber.salon_name
+                           if barber.latest_comment
+                              .top-barber-comment(aria-label="Latest customer review")
+                                 span.top-barber-comment-label Customer says
+                                 | “#{barber.latest_comment}”
+                           else
+                              .top-barber-comment
+                                 span.top-barber-comment-label Customer says
+                                 | No written review yet.
+                           .top-barber-actions
+                              .top-barber-rating
+                                 span.top-barber-stars ★
+                                 strong= Number(barber.average_rating).toFixed(1)
+                                 small= barber.review_count + (Number(barber.review_count) === 1 ? " review" : " reviews")
+                              a.top-barber-link(
+                                 href="/barbers/" + barber.id
+                                 aria-label="View " + barber.full_name + "'s profile"
+                              ) View profile →
+               else
+                  p No team ratings yet. Be the first to leave a review.
+            section.top-salons-section
+               .section-heading
+                  .section-heading-copy
+                     .eyebrow.section-eyebrow COMMUNITY FAVOURITES
+                     h2 Top 5 Rated Salons
+                  p.section-intro
+                     | The salons customers rate highest, ranked by real salon reviews.
+               if topSalons && topSalons.length
+                  .top-salons-list
+                     each salon, i in topSalons
+                        article.top-salon-row
+                           span.top-barber-rank= String(i + 1).padStart(2, "0")
+                           if salon.cover_image
+                              img.top-salon-image(src=salon.cover_image alt=salon.name + " cover photo" loading="lazy")
+                           else
+                              .top-salon-image.top-salon-image-fallback(aria-label=salon.name + " image placeholder")= salon.name
+                           .top-salon-info
+                              h3= salon.name
+                              p= [salon.address, salon.city].filter(Boolean).join(", ") || "Local salon"
+                              if salon.description
+                                 p.top-salon-description= salon.description
+                           .top-salon-rating
+                              span.top-salon-stars(aria-hidden="true") ★
+                              strong= Number(salon.average_rating).toFixed(1)
+                              small= salon.review_count + (Number(salon.review_count) === 1 ? " review" : " reviews")
+                           a.top-salon-link(href="/salons/" + salon.id aria-label="Explore " + salon.name) Explore →
+               else
+                  p No salon ratings yet. Be the first to leave a review.
+            section.how-section#how-it-works
+               .eyebrow.section-eyebrow SIMPLE BY DESIGN
+               h2 A better booking experience.
+               .steps-grid
+                  article.step-card
+                     span.step-number 01
+                     .step-symbol ⌕
+                     h3 Discover
+                     p Search nearby salons and find a service that fits you.
+                  article.step-card
+                     span.step-number 02
+                     .step-symbol ◈
+                     h3 Compare
+                     p Check services, prices, portfolios and available times.
+                  article.step-card
+                     span.step-number 03
+                     .step-symbol ↗
+                     h3 Book
+                     p Choose a service and get your next appointment in the calendar.
+            section.barber-cta#for-barbers
+               .cta-copy
+                  .eyebrow THE OTHER SIDE OF THE CHAIR
+                  h2 Great at your craft?
+                     br
+                     span Get discovered.
+                  p Create your salon profile, manage your services and bring your bookings together in one place.
+                  a.button.button-light(href="/register?role=barber") Join as a salon manager #[span(aria-hidden="true") ↗]
+               .cta-orbit(aria-hidden="true")
+                  .orbit-ring.orbit-ring-one
+                  .orbit-ring.orbit-ring-two
+                  .orbit-core B.
+         footer.footer
+            a.brand(href="/")
+               span.brand-mark B.
+               span.brand-name BARBER #[span.brand-light Finder]
+            p Built around the people behind the chair.
+            span.footer-note © 2026 Barber Finder ·
+      script(type="module" src="/js/scene.js")
+      script(src="/js/main.js" defer)
+      script(src="/js/salon-modal.js" defer)
+      script.
+         (() => {
+            document.addEventListener("DOMContentLoaded", () => {
+               // HERO SEARCH: update salon results without reloading the page.
+               const heroForm = document.getElementById("salon-search-form");
+
+               if (heroForm) {
+                  heroForm.addEventListener("submit", async (event) => {
+                     event.preventDefault();
+
+                     const input = heroForm.querySelector('input[name="q"]');
+                     const button = heroForm.querySelector('button[type="submit"]');
+                     const query = input ? input.value.trim() : "";
+
+                     if (!query) {
+                        input?.focus();
+                        return;
+                     }
+
+                     if (button) {
+                        button.disabled = true;
+                        button.textContent = "Searching...";
+                     }
+
+                     try {
+                        const url = new URL(window.location.href);
+                        url.hash = "";
+                        url.searchParams.set("q", query);
+
+                        const response = await fetch(url.toString(), {
+                           method: "GET",
+                           headers: { "X-Requested-With": "XMLHttpRequest" }
+                        });
+
+                        if (!response.ok) {
+                           throw new Error("The search request failed.");
+                        }
+
+                        const html = await response.text();
+                        const parsedDocument = new DOMParser().parseFromString(html, "text/html");
+                        const currentResults = document.querySelector("#salon-results");
+                        const newResults = parsedDocument.querySelector("#salon-results");
+
+                        if (!currentResults || !newResults) {
+                           throw new Error("Salon results grid not found. Add the salon-results ID to the salon grid in index.pug.");
+                        }
+
+                        currentResults.replaceWith(newResults);
+                        window.initialiseSalonDescriptions?.();
+                        window.history.pushState({ heroSearch: true, query }, "", url.pathname + url.search);
+
+                        document.querySelector("#discover")?.scrollIntoView({
+                           behavior: "smooth",
+                           block: "start"
+                        });
+                     } catch (error) {
+                        console.error("Hero search error:", error);
+                        alert("We couldn't complete your search. Please try again.");
+                     } finally {
+                        if (button) {
+                           button.disabled = false;
+                           button.textContent = "Search";
+                        }
+                     }
+                  });
+               }
+
+               // LOCATION BAR: keep its existing geolocation and manual-area behaviour.
+               const locationForm = document.getElementById("location-bar-form");
+               const area = document.getElementById("location-area");
+               const latInput = document.getElementById("location-lat");
+               const lngInput = document.getElementById("location-lng");
+               const serviceInput = document.getElementById("location-service");
+               const currentButton = document.getElementById("location-current-button");
+               const status = document.getElementById("location-status");
+
+               if (!locationForm || !area || !latInput || !lngInput || !status) return;
+
+               let requestInProgress = false;
+
+               function requestLocation() {
+                  if (requestInProgress) return;
+
+                  if (!navigator.geolocation) {
+                     status.textContent = "Location isn't supported here. Enter your postcode or area.";
+                     return;
+                  }
+
+                  requestInProgress = true;
+                  if (currentButton) currentButton.disabled = true;
+                  status.textContent = "Finding your location…";
+
+                  navigator.geolocation.getCurrentPosition(
+                     (position) => {
+                        latInput.value = position.coords.latitude;
+                        lngInput.value = position.coords.longitude;
+                        area.value = "";
+
+                        if (serviceInput) {
+                           serviceInput.value = document.querySelector("#salon-search-form select[name='service']")?.value || "";
+                        }
+
+                        status.textContent = "Location found. Finding nearby salons…";
+                        locationForm.requestSubmit();
+                     },
+                     (error) => {
+                        const messages = {
+                           1: "Location permission denied. Enter an area or allow location access.",
+                           2: "Couldn't determine your location. Try entering your area.",
+                           3: "Location request timed out. Please try again."
+                        };
+
+                        status.textContent = messages[error.code] || "Couldn't get your location. Enter an area manually.";
+                        if (currentButton) currentButton.disabled = false;
+                        requestInProgress = false;
+                     },
+                     {
+                        enableHighAccuracy: false,
+                        timeout: 10000,
+                        maximumAge: 60000
+                     }
+                  );
+               }
+
+               area.addEventListener("input", () => {
+                  // A manually entered area must not accidentally use old GPS coordinates.
+                  latInput.value = "";
+                  lngInput.value = "";
+                  status.textContent = area.value.trim()
+                     ? "Search salons around the area you entered."
+                     : "Use your current location or enter an area.";
+               });
+
+               locationForm.addEventListener("submit", (event) => {
+                  const manualLocation = area.value.trim();
+
+                  if (manualLocation) {
+                     latInput.value = "";
+                     lngInput.value = "";
+                     return;
+                  }
+
+                  if (!latInput.value || !lngInput.value) {
+                     event.preventDefault();
+                     requestLocation();
+                  }
+               });
+
+               currentButton?.addEventListener("click", requestLocation);
+
+              // Scroll to the salon results after a location search completes.
+              const searchParams = new URLSearchParams(window.location.search);
+
+              const hasLocationSearch =
+                searchParams.has("location") ||
+                (searchParams.has("lat") && searchParams.has("lng"));
+
+              if (hasLocationSearch) {
+                window.addEventListener("load", () => {
+                  const results = document.querySelector("#discover");
+
+                  if (results) {
+                    setTimeout(() => {
+                      results.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                      });
+                    }, 300);
+                  }
+                });
+              }
+
+
+               // Auto-request only when the page has no location choice yet.
+               const hasCoordinates = latInput.value !== "" && lngInput.value !== "";
+               const hasManualLocation = area.value.trim() !== "";
+
+               if (!hasCoordinates && !hasManualLocation) {
+                  requestLocation();
+               }
+            });
+         })();
