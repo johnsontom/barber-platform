@@ -1,0 +1,1205 @@
+- const staffTitle = typeof staff_singular === "undefined" ? "Barber" : staff_singular
+- const staffPlural = typeof staff_plural === "undefined" ? "Barbers" : staff_plural
+doctype html
+
+html(lang="en")
+
+  head
+
+    meta(charset="UTF-8")
+
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+
+
+    title= title
+
+    link(rel="stylesheet" href="/css/styles.css")
+
+    style.
+
+      .salon-profile {
+
+        --sp-bg: #11110f;
+
+        --sp-card: #1b1d17;
+
+        --sp-border: #34392b;
+
+        --sp-text: #f4f5ed;
+
+        --sp-muted: #b6bcaa;
+
+        --sp-accent: #c7ff55;
+
+        color: var(--sp-text);
+
+      }
+
+
+
+      .salon-profile .salon-hero {
+
+        position: relative;
+
+        min-height: 280px;
+
+        overflow: hidden;
+
+        display: flex;
+
+        align-items: flex-end;
+
+        padding: 30px;
+
+        margin: 25px 0 35px;
+
+        border: 1px solid var(--sp-border);
+
+        border-radius: 20px;
+
+        background: linear-gradient(135deg, #272d1d, #151710);
+
+        box-sizing: border-box;
+
+      }
+
+
+
+      .salon-profile .salon-hero-image {
+
+        position: absolute;
+
+        inset: 0;
+
+        width: 100%;
+
+        height: 100%;
+
+        object-fit: cover;
+
+      }
+
+
+
+      .salon-profile .salon-hero::after {
+
+        content: "";
+
+        position: absolute;
+
+        inset: 0;
+
+        background: linear-gradient(0deg, rgba(10,12,8,.96), rgba(10,12,8,.15));
+
+      }
+
+
+
+      .salon-profile .salon-hero-content {
+
+        position: relative;
+
+        z-index: 1;
+
+        width: 100%;
+
+      }
+
+
+
+      .salon-profile .salon-hero h1 {
+
+        margin: 8px 0;
+
+        color: #fff;
+
+        font-size: clamp(30px, 5vw, 48px);
+
+        line-height: 1.1;
+
+      }
+
+
+
+      .salon-profile .salon-hero p {
+
+        margin: 0;
+
+        color: #e0e4d7;
+
+      }
+
+
+
+      .salon-profile .salon-eyebrow {
+
+        color: var(--sp-accent);
+
+        font-size: 11px;
+
+        font-weight: 800;
+
+        letter-spacing: .14em;
+
+        text-transform: uppercase;
+
+      }
+
+
+
+      .salon-profile .salon-back {
+
+        display: inline-block;
+
+        margin-top: 10px;
+
+        color: var(--sp-muted);
+
+        text-decoration: none;
+
+      }
+
+
+
+      .salon-profile .salon-back:hover {
+
+        color: var(--sp-accent);
+
+      }
+
+
+
+      .salon-profile .salon-description {
+
+        color: var(--sp-muted);
+
+        line-height: 1.8;
+
+      }
+
+
+
+      .salon-profile .services-heading {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: end;
+
+        gap: 16px;
+
+        flex-wrap: wrap;
+
+        margin: 35px 0 20px;
+
+      }
+
+
+
+      .salon-profile .services-heading h2 {
+
+        margin: 5px 0;
+
+        color: var(--sp-text);
+
+      }
+
+
+
+      .salon-profile .services-heading p {
+
+        margin: 0;
+
+        color: var(--sp-muted);
+
+      }
+
+
+
+      .salon-profile .salon-grid {
+
+        display: grid;
+
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+
+        gap: 20px;
+
+      }
+
+
+
+      .salon-profile .salon-card {
+
+        min-width: 0;
+
+        overflow: hidden;
+
+        background: var(--sp-card);
+
+        border: 1px solid var(--sp-border);
+
+        border-radius: 16px;
+
+        transition: transform .2s, border-color .2s;
+
+      }
+
+
+
+      .salon-profile .salon-card:hover {
+
+        transform: translateY(-3px);
+
+        border-color: #718344;
+
+      }
+
+
+
+      .salon-profile .service-image-wrap {
+
+        position: relative;
+
+        width: 100%;
+
+        aspect-ratio: 4 / 3;
+
+        overflow: hidden;
+
+        background: linear-gradient(135deg, #303725, #181b14);
+
+      }
+
+
+
+      .salon-profile .service-image {
+
+        display: block;
+
+        width: 100%;
+
+        height: 100%;
+
+        object-fit: cover;
+
+        transition: transform .35s;
+
+      }
+
+
+
+      .salon-profile .salon-card:hover .service-image {
+
+        transform: scale(1.04);
+
+      }
+
+
+
+      .salon-profile .service-image-placeholder {
+
+        display: flex;
+
+        width: 100%;
+
+        height: 100%;
+
+        align-items: center;
+
+        justify-content: center;
+
+        flex-direction: column;
+
+        gap: 10px;
+
+        color: var(--sp-accent);
+
+        background: radial-gradient(circle at center, #343d25, #181b14 75%);
+
+      }
+
+
+
+      .salon-profile .service-image-placeholder span:first-child {
+
+        font-size: 42px;
+
+      }
+
+
+
+      .salon-profile .service-image-placeholder span:last-child {
+
+        color: var(--sp-muted);
+
+        font-size: 11px;
+
+        letter-spacing: .1em;
+
+        text-transform: uppercase;
+
+      }
+
+
+
+      .salon-profile .salon-card-body {
+
+        padding: 20px;
+
+      }
+
+
+
+      .salon-profile .service-category {
+
+        color: var(--sp-accent);
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+        letter-spacing: .1em;
+
+        text-transform: uppercase;
+
+      }
+
+
+
+      .salon-profile .salon-card h3 {
+
+        margin: 8px 0;
+
+        color: var(--sp-text);
+
+        font-size: 20px;
+
+      }
+
+
+
+      .salon-profile .service-description {
+
+        min-height: 42px;
+
+        margin: 0 0 17px;
+
+        color: var(--sp-muted);
+
+        font-size: 13px;
+
+        line-height: 1.7;
+
+      }
+
+
+
+      .salon-profile .salon-meta {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        gap: 10px;
+
+        padding: 15px 0;
+
+        margin-top: auto;
+
+        border-top: 1px solid var(--sp-border);
+
+      }
+
+
+
+      .salon-profile .salon-meta span {
+
+        color: var(--sp-muted);
+
+        font-size: 12px;
+
+      }
+
+
+
+      .salon-profile .salon-meta strong {
+
+        color: var(--sp-accent);
+
+        font-size: 20px;
+
+      }
+
+
+
+      .salon-profile .service-book-link {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 12px;
+
+        padding: 12px 14px;
+
+        border-radius: 9px;
+
+        background: var(--sp-accent);
+
+        color: #15180e;
+
+        text-decoration: none;
+
+        font-size: 13px;
+
+        font-weight: 800;
+
+        transition: background .2s;
+
+      }
+
+
+
+      .salon-profile .service-book-link:hover {
+
+        background: #ddff9b;
+
+      }
+
+
+
+      /* Individual barber profiles */
+
+      .salon-profile .barber-image-wrap {
+
+        aspect-ratio: 4 / 3;
+
+      }
+
+
+
+      .salon-profile .barber-card h3 {
+
+        overflow-wrap: anywhere;
+
+      }
+
+
+
+      .salon-profile .barber-card .service-description {
+
+        overflow-wrap: anywhere;
+
+      }
+
+      .salon-profile .barber-card-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .salon-profile .barber-card-actions .service-book-link {
+        min-width: 0;
+        padding: 12px 10px;
+        font-size: 12px;
+      }
+
+
+
+      .salon-profile .salon-empty {
+
+        padding: 35px 22px;
+
+        border: 1px dashed var(--sp-border);
+
+        border-radius: 14px;
+
+        color: var(--sp-muted);
+
+        text-align: center;
+
+      }
+
+
+
+      .salon-profile .salon-empty strong {
+
+        display: block;
+
+        margin-bottom: 8px;
+
+        color: var(--sp-text);
+
+      }
+
+
+
+      @media (max-width: 560px) {
+
+        .salon-profile .salon-hero {
+
+          min-height: 240px;
+
+          padding: 20px;
+
+        }
+
+
+
+        .salon-profile .salon-card-body {
+
+          padding: 16px;
+
+        }
+
+      }
+      
+      .salon-profile {
+        --review-gold: #d6ad55;
+      }
+
+      .salon-reviews {
+        margin: 40px 0;
+        color: var(--sp-text);
+      }
+
+      .salon-rating-summary {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 22px;
+        margin-bottom: 22px;
+        background: var(--sp-card);
+        border: 1px solid var(--sp-border);
+        border-radius: 14px;
+      }
+
+      .rating-score strong {
+        display: block;
+        font-size: 38px;
+      }
+
+      .rating-stars,
+      .review-stars {
+        letter-spacing: 2px;
+        font-size: 18px;
+      }
+
+      .star-filled {
+        color: var(--review-gold);
+      }
+
+      .star-empty {
+        color: #62645c;
+      }
+
+      .rating-count,
+      .review-date {
+        display: block;
+        margin-top: 6px;
+        color: var(--sp-muted);
+        font-size: 12px;
+      }
+
+      .salon-review-form {
+        display: grid;
+        gap: 12px;
+        padding: 22px;
+        margin-bottom: 24px;
+        background: var(--sp-card);
+        border: 1px solid var(--sp-border);
+        border-radius: 14px;
+      }
+
+      .salon-review-form h3,
+      .salon-review-form p {
+        margin: 0;
+      }
+
+      .salon-review-form label {
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .salon-review-form select,
+      .salon-review-form textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px;
+        color: var(--sp-text);
+        background: #11110f;
+        border: 1px solid var(--sp-border);
+        border-radius: 8px;
+        font: inherit;
+      }
+
+      .salon-review-form textarea {
+        resize: vertical;
+      }
+
+      .salon-review-submit {
+        padding: 13px 18px;
+        color: #17140d;
+        background: var(--review-gold);
+        border: 0;
+        border-radius: 8px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .salon-review-submit:hover {
+        background: #e6c77e;
+      }
+
+      .salon-review-notice {
+        padding: 16px;
+        color: var(--sp-muted);
+        background: var(--sp-card);
+        border-radius: 10px;
+      }
+
+      .salon-review-notice a {
+        color: var(--review-gold);
+      }
+
+      .salon-review-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .salon-review-card {
+        padding: 20px;
+        background: var(--sp-card);
+        border: 1px solid var(--sp-border);
+        border-radius: 12px;
+      }
+
+      .salon-review-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .review-comment {
+        margin-bottom: 0;
+        color: var(--sp-muted);
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+      }
+
+      @media (max-width: 480px) {
+        .salon-rating-summary,
+        .salon-review-card {
+          padding: 15px;
+        }
+
+        .salon-review-header {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 6px;
+        }
+      }
+
+
+
+
+      /* Mobile layout: two columns for services and barbers */
+      @media (max-width: 700px) {
+        .salon-profile .salon-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 12px;
+        }
+
+        .salon-profile .salon-grid > .salon-card {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+          overflow: hidden;
+        }
+
+        .salon-profile .service-image-wrap {
+          width: 100%;
+          aspect-ratio: 4 / 3;
+          min-height: 0;
+        }
+
+        .salon-profile .service-image {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .salon-profile .service-image-placeholder {
+          width: 100%;
+          min-height: 0;
+          height: 100%;
+          padding: 8px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+
+        .salon-profile .service-image-placeholder span:first-child {
+          font-size: 30px;
+        }
+
+        .salon-profile .salon-card-body {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          min-width: 0;
+          padding: 10px;
+        }
+
+        .salon-profile .salon-card h3 {
+          font-size: 13px;
+          line-height: 1.4;
+          overflow-wrap: anywhere;
+        }
+
+        .salon-profile .service-category {
+          font-size: 9px;
+          overflow-wrap: anywhere;
+        }
+
+        .salon-profile .service-description {
+          min-height: 0;
+          margin: 0 0 10px;
+          font-size: 11px;
+          line-height: 1.5;
+          overflow-wrap: anywhere;
+        }
+
+        .salon-profile .salon-meta {
+          gap: 6px;
+          padding: 10px 0;
+          flex-wrap: wrap;
+        }
+
+        .salon-profile .salon-meta span {
+          font-size: 10px;
+        }
+
+        .salon-profile .salon-meta strong {
+          font-size: 14px;
+        }
+
+        .salon-profile .service-book-link {
+          min-width: 0;
+          gap: 5px;
+          padding: 9px 7px;
+          font-size: 10px;
+          overflow-wrap: anywhere;
+        }
+
+        .salon-profile .barber-card-actions {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 7px;
+          margin-top: auto;
+          padding-top: 10px;
+        }
+
+        .salon-profile .barber-card-actions .service-book-link {
+          padding: 9px 6px;
+          font-size: 10px;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .salon-profile .salon-grid {
+          gap: 8px;
+        }
+
+        .salon-profile .salon-card-body {
+          padding: 8px;
+        }
+
+        .salon-profile .service-book-link {
+          padding: 8px 5px;
+          font-size: 9px;
+        }
+      }
+
+
+    include partials/theme-head
+
+  body
+
+    .site-shell.salon-profile
+
+      header.navbar
+
+        a.brand(href="/" aria-label="Barber Finder home")
+
+          span.brand-mark B.
+
+          span.brand-name BARBER #[span.brand-light FINDER]
+
+
+
+        nav.nav-links
+
+          a(href="/#discover") Discover
+
+          a(href="/#how-it-works") How it works
+
+
+
+        
+        .nav-actions
+          if currentUser
+            a.nav-account(
+              href="/dashboard"
+              aria-label=(currentUser.role === "admin" ? "Administrator dashboard" : currentUser.role === "barber" ? "Salon manager dashboard" : "Customer account")
+              title=(currentUser.role === "admin" ? "Administrator" : currentUser.role === "barber" ? "Salon manager" : "My account")
+            )
+              if currentUser.role === "admin"
+                span.nav-account-icon(aria-hidden="true") ♙
+                span.nav-account-label Admin
+              else if currentUser.role === "barber"
+                span.nav-account-icon(aria-hidden="true") ✂
+                span.nav-account-label Manager
+              else
+                span.nav-account-icon(aria-hidden="true") ♙
+                span.nav-account-label Account
+          else
+            a.nav-login(href="/login") Log in
+          include partials/theme-toggle
+          a.button.button-small(href="/#discover") Find a salon
+
+
+
+
+      main
+
+        section.discover-section
+
+          a.salon-back(href="/") ← Back to all salons
+
+
+
+          .salon-hero
+
+            if salon.cover_image
+
+              img.salon-hero-image(
+
+                src=salon.cover_image
+
+                alt=salon.name + " salon"
+
+                loading="eager"
+
+              )
+
+
+
+            .salon-hero-content
+
+              span.salon-eyebrow SALON PROFILE
+
+              h1= salon.name
+
+              p= salon.address + ", " + salon.city
+
+
+
+          if salon.description
+
+            p.salon-description= salon.description
+
+          else
+
+            p.salon-description Discover the services available at this salon and choose the one that's right for you.
+          
+          
+
+
+          if user && user.role === "customer" && salon.owner_approval_status === "approved"
+            section.salon-message-panel
+              div.salon-message-copy
+                p.salon-eyebrow DIRECT MESSAGE
+                h2 Questions before you book?
+                p Message the salon manager about services, timing, or anything you want to check before your visit.
+              form.salon-message-form(action="/messages/salon/" + salon.id method="POST")
+                input(type="hidden" name="platform_token" value=platformToken)
+                button.salon-message-button(type="submit") Message salon
+                span Replies stay in your Barber Finder inbox.
+
+          else if !user
+            section.salon-message-panel
+              div.salon-message-copy
+                p.salon-eyebrow DIRECT MESSAGE
+                h2 Have a question?
+                p Log in as a customer to message the salon manager and keep the conversation in your inbox.
+              a.salon-message-button(href="/login") Log in to message
+
+
+
+        
+
+
+
+          //- Services and pricing
+
+          .services-heading
+
+            div
+
+              p.salon-eyebrow THE SERVICE MENU
+
+              h2 Services and pricing
+
+              p Browse the services and book your preferred appointment.
+
+
+
+          if services.length
+
+            .salon-grid
+
+              each service in services
+
+                article.salon-card
+
+                  .service-image-wrap
+
+                    if service.image_url
+
+                      img.service-image(
+
+                        src=service.image_url
+
+                        alt=service.name + " at " + salon.name
+
+                        loading="lazy"
+
+                      )
+
+                    else
+
+                      .service-image-placeholder
+
+                        span(aria-hidden="true") ✂
+
+                        span Service photo coming soon
+
+
+
+                  .salon-card-body
+
+                    span.service-category= typeof category_name === "undefined" ? "Salon service" : category_name
+
+                    h3= service.name
+
+
+
+                    if service.description
+
+                      p.service-description= service.description
+
+                    else
+
+                      p.service-description A professional grooming service tailored to your style.
+
+
+
+                    .salon-meta
+
+                      span
+
+                        icon-placeholder
+
+                        | #{service.duration_minutes} minutes
+
+                      strong= "£" + Number(service.price).toFixed(2)
+
+
+
+                    a.service-book-link(href="/booking?service_id=" + service.id + "&salon_id=" + salon.id)
+
+                      span Book this service
+
+                      span(aria-hidden="true") →
+
+
+
+          else
+
+            .salon-empty
+
+              strong No services available yet
+
+              | This salon hasn't added any services. Please check back later.
+
+  
+
+          .services-heading
+
+            div
+
+              p.salon-eyebrow MEET THE TEAM
+
+              h2= "Our " + staffPlural
+
+              p Meet the professionals behind the chair.
+
+
+
+          if barbers && barbers.length
+
+            .salon-grid.barbers-grid
+
+              each barber in barbers
+
+                article.salon-card.barber-card
+
+                  .service-image-wrap.barber-image-wrap
+
+                    if barber.profile_image
+
+                      img.service-image(
+
+                        src=barber.profile_image
+
+                        alt=barber.full_name
+
+                        loading="lazy"
+
+                      )
+
+                    else
+
+                      .service-image-placeholder
+
+                        span(aria-hidden="true") 👤
+
+                        span= staffTitle + " profile"
+
+
+
+                  .salon-card-body
+
+                    span.service-category= barber.speciality
+
+                    h3= barber.full_name
+
+
+
+                    if barber.bio
+
+                      p.service-description= barber.bio
+
+                    else
+
+                      p.service-description Experienced professional ready to help you choose your treatment.
+
+                    .barber-card-actions
+                      a.service-book-link(href="/barbers/" + barber.id)
+                        span View profile
+                        span(aria-hidden="true") →
+
+                      a.service-book-link(href="/barbers/" + barber.id + "/reviews")
+                        span Rate team member
+                        span(aria-hidden="true") ★
+
+
+
+          else
+
+            .salon-empty
+
+              strong No team profiles yet
+
+              | This salon hasn't added its team profiles yet.
+          //- SALON RATINGS AND CUSTOMER REVIEWS
+          section#salon-reviews.salon-reviews
+            .services-heading
+              div
+                p.salon-eyebrow CUSTOMER FEEDBACK
+                h2 Ratings and reviews
+                p See what customers think about this salon.
+
+            .salon-rating-summary
+              .rating-score
+                strong= Number(averageRating || 0).toFixed(1)
+                .rating-stars(aria-label=Number(averageRating || 0).toFixed(1) + " out of 5 stars")
+                  - const fullStars = Math.round(Number(averageRating || 0))
+                  each star in [1, 2, 3, 4, 5]
+                    span(class=star <= fullStars ? "star-filled" : "star-empty") ★
+                span.rating-count
+                  | #{reviewCount || 0} customer review(s)
+
+            if user && user.role === "customer"
+              if !myReview
+                form.salon-review-form(action="/salons/" + salon.id + "/reviews" method="POST")
+                  h3 Rate this salon
+                  p Tell other customers about your experience.
+
+                  label(for="salon-rating") Your rating
+                  select#salon-rating(name="rating" required)
+                    option(value="" selected disabled) Select a rating
+                    option(value="5") ★★★★★ Excellent — 5 stars
+                    option(value="4") ★★★★☆ Very good — 4 stars
+                    option(value="3") ★★★☆☆ Good — 3 stars
+                    option(value="2") ★★☆☆☆ Fair — 2 stars
+                    option(value="1") ★☆☆☆☆ Poor — 1 star
+
+                  label(for="salon-comment") Your review
+                  textarea#salon-comment(
+                    name="comment"
+                    rows="4"
+                    maxlength="2000"
+                    placeholder="Share your experience (optional)..."
+                  )
+
+                  button.salon-review-submit(type="submit") Submit review
+              else
+                p.salon-review-notice You have already reviewed this salon.
+            else if !user
+              p.salon-review-notice
+                | Please 
+                a(href="/login") log in
+                |  as a customer to rate this salon.
+
+            if reviews && reviews.length
+              .salon-review-list
+                each review in reviews
+                  article.salon-review-card
+                    .salon-review-header
+                      strong= review.customer_name || "Customer"
+                      span.review-stars(aria-label=review.rating + " out of 5 stars")
+                        - const customerStars = Number(review.rating) || 0
+                        each star in [1, 2, 3, 4, 5]
+                          span(class=star <= customerStars ? "star-filled" : "star-empty") ★
+                    if review.created_at
+                      p.review-date= new Date(review.created_at).toLocaleDateString("en-GB")
+                    if review.comment
+                      p.review-comment= review.comment
+            else
+              .salon-empty
+                strong No reviews yet
+                | Be the first customer to rate this salon.
+
+      
+      footer.footer
+
+        a.brand(href="/")
+
+          span.brand-mark B.
+
+          span.brand-name BARBER #[span.brand-light FINDER]
+
+        p Built around the people behind the chair.
+
+        span.footer-note © 2026 Barber Finder · 
