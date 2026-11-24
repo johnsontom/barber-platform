@@ -1,0 +1,35 @@
+extends community-layout
+block content
+  section.community-hero.forum-form-hero
+    a.community-back(href=post ? "/forum/" + post.id : "/forum") ← Back to discussions
+    p.community-eyebrow SHARE YOUR PERSPECTIVE
+    h1= post ? "Edit your discussion" : "Start a discussion"
+    p.community-lede An experience, a question or an idea. Give it a title and let the conversation begin.
+  section.community-panel.forum-compose
+    if error
+      p.community-alert(role="alert")= error
+    form.community-form(method="POST" action=post ? "/forum/" + post.id + "/edit" : "/forum/posts")
+      input(type="hidden" name="forum_token" value=forumToken)
+      .community-field
+        label(for="discussion-title") Discussion title
+        input#discussion-title(type="text" name="title" value=form.title minlength="3" maxlength="160" required placeholder="What would you like to talk about?")
+      .forum-form-row
+        .community-field
+          label(for="discussion-category") Category
+          select#discussion-category(name="category" required data-forum-category)
+            each category in categories
+              option(value=category.value selected=form.category === category.value)= category.label
+        .community-field(data-forum-salon)
+          label(for="discussion-salon") Related salon (optional)
+          select#discussion-salon(name="salon_id")
+            option(value="") No specific salon
+            each salon in salons
+              option(value=salon.id selected=Number(form.salon_id) === Number(salon.id)) #{salon.name} · #{salon.city}
+          p.community-help Choose a salon when posting in the Salons category.
+      .community-field
+        label(for="discussion-body") Your opinion or idea
+        textarea#discussion-body(name="body" rows="10" minlength="10" maxlength="10000" required placeholder="Share the details. What happened, what could improve, or what would you like to see?")= form.body || ""
+      p.community-help Keep the conversation respectful and avoid sharing private contact or appointment details.
+      .community-actions
+        button.community-button(type="submit")= post ? "Save discussion" : "Publish discussion"
+        a.community-button.community-button-outline(href=post ? "/forum/" + post.id : "/forum") Cancel

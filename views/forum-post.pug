@@ -1,0 +1,82 @@
+extends community-layout
+block content
+  .forum-detail-top
+    a.community-back(href="/forum") ← All discussions
+    a(href="/forum/new") Start a discussion +
+  article.community-panel.forum-discussion#discussion
+    .forum-meta
+      span.forum-category= post.categoryLabel
+      if post.salon_name
+        a(href="/salons/" + post.salon_id)= post.salon_name
+    h1= post.title
+    .forum-author
+      span.forum-avatar(aria-hidden="true")= post.authorInitials
+      div
+        strong= post.author_name
+        time(datetime=post.createdIso)= post.dateLabel
+    .forum-body= post.body
+    .forum-discussion-actions
+      if user
+        form(method="POST" action="/forum/" + post.id + "/like")
+          input(type="hidden" name="forum_token" value=forumToken)
+          input(type="hidden" name="liked" value=post.liked ? "0" : "1")
+          button.forum-like(type="submit" aria-pressed=post.liked aria-label=(post.liked ? "Unlike discussion" : "Like discussion") + ", " + post.like_count + " likes") #{post.liked ? "♥ Liked" : "♡ Like"} · #{post.like_count}
+      else
+        a.forum-like(href="/login") ♡ #{post.like_count} · Sign in to like
+      span.community-help #{post.comment_count} #{post.comment_count === 1 ? "comment" : "comments"}
+      if post.canEdit
+        a.forum-text-action(href="/forum/" + post.id + "/edit") Edit discussion
+      if post.canDelete
+        form.forum-delete-form(method="POST" action="/forum/" + post.id + "/delete" data-confirm-delete="Remove this discussion and its comments? This cannot be undone.")
+          input(type="hidden" name="forum_token" value=forumToken)
+          button.forum-text-action.forum-delete(type="submit") Remove discussion
+  section.forum-comments#comments(aria-labelledby="comments-heading")
+    .forum-comments-heading
+      h2#comments-heading The conversation
+      span #{post.comment_count} #{post.comment_count === 1 ? "comment" : "comments"}
+    if error
+      p.community-alert(role="alert")= error
+    if user
+      form.community-panel.community-form.forum-comment-form(method="POST" action="/forum/" + post.id + "/comments")
+        input(type="hidden" name="forum_token" value=forumToken)
+        .community-field
+          label(for="comment-body") Add your comment
+          textarea#comment-body(name="body" rows="3" maxlength="3000" required placeholder="What do you think?")= commentBody
+        button.community-button.community-button-small(type="submit") Post comment
+    else
+      .forum-membership.community-panel
+        p Sign in to share your opinion and join this conversation.
+        a.community-button.community-button-small(href="/login") Sign in to comment
+    if replies.comments.length
+      .forum-comment-list
+        each comment in replies.comments
+          article.community-panel.forum-comment(id="comment-" + comment.id)
+            .forum-author
+              span.forum-avatar(aria-hidden="true")= comment.authorInitials
+              div
+                strong= comment.author_name
+                time(datetime=comment.createdIso)= comment.dateLabel
+            .forum-body= comment.body
+            .forum-discussion-actions
+              if user
+                form(method="POST" action="/forum/" + post.id + "/comments/" + comment.id + "/like")
+                  input(type="hidden" name="forum_token" value=forumToken)
+                  input(type="hidden" name="liked" value=comment.liked ? "0" : "1")
+                  input(type="hidden" name="comments_page" value=replies.page)
+                  button.forum-like(type="submit" aria-pressed=comment.liked aria-label=(comment.liked ? "Unlike comment" : "Like comment") + ", " + comment.like_count + " likes") #{comment.liked ? "♥ Liked" : "♡ Like"} · #{comment.like_count}
+              else
+                span.community-help ♥ #{comment.like_count}
+              if comment.canDelete
+                form.forum-delete-form(method="POST" action="/forum/" + post.id + "/comments/" + comment.id + "/delete" data-confirm-delete="Remove this comment? This cannot be undone.")
+                  input(type="hidden" name="forum_token" value=forumToken)
+                  input(type="hidden" name="comments_page" value=replies.page)
+                  button.forum-text-action.forum-delete(type="submit") Remove comment
+    else
+      p.forum-comments-empty No comments yet. Add a thought to get things started.
+    if replies.pages > 1
+      nav.forum-pagination(aria-label="Comment pages")
+        if replies.page > 1
+          a.community-button.community-button-outline(href="/forum/" + post.id + "?comments_page=" + (replies.page - 1) + "#comments") ← Previous
+        span Page #{replies.page} of #{replies.pages}
+        if replies.page < replies.pages
+          a.community-button.community-button-outline(href="/forum/" + post.id + "?comments_page=" + (replies.page + 1) + "#comments") Next →

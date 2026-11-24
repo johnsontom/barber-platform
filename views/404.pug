@@ -1,0 +1,17 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title= title
+    link(rel="stylesheet" href="/css/styles.css")
+    include partials/theme-head
+
+  body
+    main.not-found
+      .page-theme-controls
+        include partials/theme-toggle
+      span.brand-mark B.
+      h1 Page not found
+      p The page you are looking for doesn't exist yet.
+      a.button(href="/") Back to homepage

@@ -1,0 +1,124 @@
+- const staffTitle = typeof staff_singular === "undefined" ? "Barber" : staff_singular
+- const staffPlural = typeof staff_plural === "undefined" ? "Barbers" : staff_plural
+
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet" href="/css/styles.css")
+    title= barber.full_name + " | " + staffTitle + " Profile"
+    style.
+      .barber-profile-page {
+        max-width: 900px;
+        width: calc(100% - 32px);
+        margin: 50px auto;
+        padding: 32px;
+        background: #141510;
+        color: #f5f3ed;
+        border: 1px solid #303229;
+        border-radius: 18px;
+      }
+      .barber-profile-page a {
+        color: #c5a66b;
+        text-decoration: none;
+      }
+      .barber-profile-page .muted {
+        color: #a5a69e;
+        line-height: 1.7;
+      }
+      .barber-profile-page .barber-photo {
+        width: 130px;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #c5a66b;
+      }
+      .barber-profile-page .profile-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+      .barber-profile-page .profile-button {
+        display: inline-block;
+        padding: 12px 18px;
+        border-radius: 9px;
+        background: #c5a66b;
+        color: #11110f;
+        font-weight: bold;
+      }
+      .barber-profile-page .secondary-button {
+        background: transparent;
+        color: #c5a66b;
+        border: 1px solid #c5a66b;
+      }
+      @media (max-width: 600px) {
+        .barber-profile-page { padding: 22px; margin: 24px auto; }
+      }
+    include partials/theme-head
+
+  body
+    main.barber-profile-page
+      .page-theme-controls
+        include partials/theme-toggle
+      a(href="/salons/" + barber.salon_id) ← Back to salon
+
+      if barber.profile_image
+        img.barber-photo(
+          src=barber.profile_image
+          alt=barber.full_name
+        )
+
+      h1= barber.full_name
+      p.muted= barber.speciality || staffTitle
+      if barber.bio
+        p= barber.bio
+      else
+        p.muted No biography available yet.
+
+      h2 Salon details
+      p= barber.salon_name
+      p.muted= barber.address
+      p.muted= barber.city
+
+      
+      .profile-actions
+        a.profile-button(href="/booking?salon_id=" + barber.salon_id + "&barber_id=" + barber.id) Book with #{barber.full_name.split(" ")[0]}
+        a.profile-button.secondary-button(href="/salons/" + barber.salon_id) View salon
+
+        if myReview
+          span.profile-button.secondary-button You have reviewed this team member
+        else if !myReview
+          if reviewCount >= 0
+            if !myReview
+              a.profile-button(href="/barbers/" + barber.id + "/reviews") ★ Rate this team member
+
+      section.barber-reviews
+        h2 Customer ratings and reviews
+
+        .rating-summary
+          span.average-rating= averageRating.toFixed(1) + " / 5"
+          span.stars(aria-label=averageRating.toFixed(1) + " out of 5 stars")= "★".repeat(Math.round(averageRating))
+          p= reviewCount + (reviewCount === 1 ? " review" : " reviews")
+
+        if myReview
+          article.review-card.my-review
+            h3 Your review
+            p.review-stars= "★".repeat(myReview.rating) + "☆".repeat(5 - myReview.rating)
+            p= myReview.comment || "No written comment provided."
+            if myReview.created_at
+              small= new Date(myReview.created_at).toLocaleDateString("en-GB")
+
+        if reviews.length
+          h3 All customer reviews
+
+          each review in reviews
+            article.review-card
+              h4= review.customer_name || "Customer"
+              p.review-stars= "★".repeat(review.rating) + "☆".repeat(5 - review.rating)
+              p= review.comment || "No written comment provided."
+              if review.created_at
+                small= new Date(review.created_at).toLocaleDateString("en-GB")
+        else
+          p.muted No reviews yet. Be the first to review this team member.
